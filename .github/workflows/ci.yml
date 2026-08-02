@@ -55,6 +55,9 @@ jobs:
       - name: Enforce concepts neutrality
         run: npm run check:concepts
 
+      - name: Validate contributor examples
+        run: npm run check:examples
+
       - name: Check rendered internal links
         run: npm run check:links
 

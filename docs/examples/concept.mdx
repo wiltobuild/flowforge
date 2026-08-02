@@ -1,0 +1,52 @@
+---
+title: Context windows
+description: A vendor-neutral explanation of how much of a conversation an AI system can consider at once.
+type: concept
+level: beginner
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: stable
+role: [builder, operator, strategist]
+task: [research, code, write]
+tool: [agnostic]
+plan: [free, claude-pro, chatgpt-plus]
+quota: n-a
+effort: 5min
+glossary_terms: [context window]
+next:
+  - label: Prompt library
+    link: /prompting/
+  - label: Plans and usage
+    link: /plans/
+---
+
+## One-line definition
+
+A context window is the limited working memory an AI system uses to read your current request, instructions, files, and earlier conversation.
+
+## Why it matters
+
+When the working memory is crowded, important constraints can be less reliable and the system may need you to restate them. Planning what to include helps you get a coherent result without repeatedly rebuilding context.
+
+## Mental model
+
+Think of a context window as one desk. You can spread out the materials needed for the current job, but eventually new papers push older ones to the edge. A tidy brief keeps the important pages within reach.
+
+## How it actually works
+
+Your message, attached material, system instructions, tool results, and the system's response all consume room in the same working set. Long tasks work best when you keep a concise source of truth, ask for summaries at handoffs, and give the next step only the relevant files.
+
+## Common misunderstandings
+
+- A larger window does not guarantee careful use of every detail; clear priorities still matter.
+- Starting a new conversation is not automatically bad. It can be the cleanest handoff when you carry forward a short, accurate brief.
+- Context size is different from a subscription limit: one is working-memory capacity, while the other controls how much work you may run in a period.
+
+## In practice
+
+Use a tool-specific workflow page to learn how to create a handoff brief, attach the right files, or summarize a long session. Keep product-specific instructions on those `/tools` pages so this concept remains useful as tools change.
+
+## Go deeper
+
+For multi-step work, treat the brief as an interface: record the goal, non-negotiable constraints, current state, and the next decision. This lets another session—or another person—continue without rereading every intermediate attempt.

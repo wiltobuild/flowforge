@@ -1,0 +1,61 @@
+---
+title: Turn a rough request into an executable brief
+description: A prompt for turning an ambiguous request into a scoped brief with decisions, risks, and a next step.
+type: prompt
+level: beginner
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: stable
+role: [builder, operator, strategist]
+task: [plan, write, collaborate]
+tool: [chat-ui, codex]
+plan: [free, chatgpt-plus]
+quota: light
+effort: 5min
+situation: A request is clear enough to start but too vague to execute safely.
+next:
+  - label: Prompt library
+    link: /prompting/
+  - label: Planning playbooks
+    link: /playbooks/
+---
+
+## Situation
+
+Use this before starting work when the request has a desired outcome but leaves assumptions, audience, or success criteria unstated.
+
+## The prompt
+
+```text
+Turn the request below into an executable brief.
+
+Request: {{rough_request}}
+Audience: {{audience}}
+Constraints: {{constraints}}
+
+Return:
+1. the outcome in one sentence;
+2. assumptions that need confirmation;
+3. a small first deliverable;
+4. risks or missing inputs; and
+5. the single best next question, if one is necessary.
+
+Do not begin the work yet. Mark uncertain statements as assumptions.
+```
+
+## Why it works
+
+It separates understanding the task from performing it. Asking for assumptions makes invisible decisions reviewable before they become expensive output.
+
+## Variations
+
+For a technical request, add the relevant files and acceptance tests. For a stakeholder request, ask for a decision memo with options and tradeoffs instead of a delivery plan.
+
+## When it fails
+
+It cannot recover facts that nobody has supplied. If the request depends on policy, data access, or a decision owner, get that input rather than treating a polished guess as a brief.
+
+## Related
+
+Pair this with a planning playbook, then use a review prompt to compare the completed work against the agreed brief.

@@ -1,0 +1,72 @@
+---
+title: Plan a small change before building
+description: A short playbook for turning a scoped request into a reviewable plan before implementation begins.
+type: playbook
+level: beginner
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: stable
+role: [builder, operator, strategist]
+task: [plan, code, collaborate]
+tool: [chat-ui, codex]
+plan: [free, chatgpt-plus]
+quota: moderate
+effort: 30min
+situation: You need to change something, but the request does not yet define a safe first step.
+time_estimate: 20–30 minutes
+next:
+  - label: Prompt library
+    link: /prompting/
+  - label: Planning patterns
+    link: /patterns/
+---
+
+## The situation
+
+Use this when a request sounds small but could touch several decisions, files, or people. The goal is a plan someone else can review—not an impressive amount of speculative work.
+
+## Prerequisites
+
+Have the request, the relevant source material, and an owner available for unresolved decisions. A free plan is realistic for the first brief; a paid plan may be more comfortable if you need to inspect a larger codebase or iterate on the plan.
+
+## Steps
+
+1. **Capture the outcome** — quota weight: light.
+
+   ```text
+   Rewrite {{request}} as one outcome, its audience, constraints, and a visible success check.
+   Mark anything not supplied as an assumption.
+   ```
+
+2. **Map the smallest scope** — quota weight: light.
+
+   List the files, decisions, or stakeholders likely involved. Exclude adjacent improvements unless they are required for the outcome.
+
+3. **Draft the plan** — quota weight: moderate.
+
+   ```text
+   Create a small implementation plan for {{outcome}} using {{known_scope}}.
+   For each step, name the artifact changed, the acceptance check, and the main risk.
+   End with open decisions; do not implement yet.
+   ```
+
+4. **Review the plan with the owner** — quota weight: light.
+
+   Confirm the outcome, scope, and first deliverable. Record what was deliberately postponed.
+
+## Decision points
+
+If the request has no acceptance check, stop and define one before planning. If the scope crosses a system boundary or needs approval, create a decision note and wait for the owner rather than guessing.
+
+## What good looks like
+
+The result fits on one screen, identifies the first change and how to verify it, and makes open decisions impossible to miss. A reviewer can say yes, no, or “change this assumption” without reconstructing the conversation.
+
+## What goes wrong
+
+The common failure is a plan that is really a list of implementation guesses. Another is treating every related cleanup as required scope. Return to the outcome and defer anything that does not serve it.
+
+## Variations by tool
+
+Use a chat tool for a lightweight brief, or a repository-aware tool when the plan needs evidence from local files. Link to the relevant `/tools` workflow for tool-specific setup and limits.

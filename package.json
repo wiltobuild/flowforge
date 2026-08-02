@@ -13,9 +13,10 @@
     "validate": "astro build --silent",
     "check:build": "node scripts/build-without-warnings.mjs",
     "check:concepts": "node scripts/check-concepts-neutrality.mjs",
+    "check:examples": "node scripts/check-examples.mjs",
     "check:links": "node scripts/check-internal-links.mjs",
     "check:a11y": "node scripts/scan-a11y.mjs",
-    "ci": "npm run check:build && npm run check:concepts && npm run check:links && npm run check:a11y"
+    "ci": "npm run check:build && npm run check:concepts && npm run check:examples && npm run check:links && npm run check:a11y"
   },
   "engines": {
     "node": ">=22.12.0"
