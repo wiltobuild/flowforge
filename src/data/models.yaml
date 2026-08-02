@@ -1,0 +1,17 @@
+# Models. Schema: src/schemas/data.ts (modelSchema).
+# Spec: docs/04-data-schemas.md
+#
+# NO BENCHMARK SCORE FIELDS. Ever. See docs/00-product-brief.md for the
+# reasoning: they go stale in weeks, they are gameable, and single-turn
+# preference scores correlate poorly with agentic reliability — which is the
+# only mode most of this audience works in.
+#
+# `external_signals` holds attributed links with a qualitative note. If you are
+# about to add a number to one, stop.
+#
+# `available_on` is the ONLY place the plan↔model relationship is stored. Plans
+# do not carry a models list; plan pages derive theirs from this field. Storing
+# it both ways guarantees the two drift apart.
+#
+# Populated in M1-T2.
+[]

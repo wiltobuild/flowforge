@@ -1,0 +1,11 @@
+# Changelog. Schema: src/schemas/data.ts (changelogSchema).
+# Spec: docs/04-data-schemas.md
+#
+# NOT a release feed. An entry belongs here only when it changes a
+# recommendation on this site.
+#
+# `pages_updated` is the accountability mechanism: a landscape change with no
+# updated pages is a visible to-do rather than a silent gap.
+#
+# Populated in M1-T12.
+[]

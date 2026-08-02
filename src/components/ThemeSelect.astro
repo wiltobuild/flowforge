@@ -1,0 +1,24 @@
+---
+/**
+ * Starlight component override.
+ *
+ * Renders Starlight's own theme picker unchanged, plus our level toggle beside
+ * it. Overriding this slot rather than the whole Header means we inherit every
+ * future Starlight header improvement instead of forking it.
+ */
+import Default from '@astrojs/starlight/components/ThemeSelect.astro';
+import LevelToggle from './LevelToggle.astro';
+---
+
+<div class="ff-header-controls">
+  <LevelToggle />
+  <Default><slot /></Default>
+</div>
+
+<style>
+  .ff-header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--ff-space-3);
+  }
+</style>

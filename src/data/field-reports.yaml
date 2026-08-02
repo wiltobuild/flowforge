@@ -1,0 +1,18 @@
+# Field reports. Schema: src/schemas/data.ts (fieldReportSchema).
+# Spec: docs/04-data-schemas.md
+#
+# The site's unfair advantage: real observations of how much of a subscription
+# window a task actually consumed. This data exists nowhere else, because
+# providers will not commit to numbers and it genuinely depends on context size
+# and tooling.
+#
+# These are TIMESTAMPED OBSERVATIONS, NOT CLAIMS. A report from March remains a
+# true report from March. Never rewrite an old report to match current
+# conditions — that is why this data ages gracefully where stated limits do not.
+#
+# Ingestion: GitHub issue form -> triage (.claude/agents/field-report-triager.md)
+# -> PR into this file. Never auto-merged. Outliers are flagged for human review,
+# never discarded — they are sometimes the most informative reports.
+#
+# Populated from M1-T8 onward, seeded by the L3 harvest (docs/09 §1).
+[]

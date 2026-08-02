@@ -1,0 +1,142 @@
+/**
+ * Level toggle behaviour. Spec: docs/01-information-architecture.md.
+ *
+ * The central rule: content above the reader's level is COLLAPSED, NOT REMOVED.
+ * Deleting it from the DOM would break in-page search, deep links, and
+ * copy-paste, and it reads as gatekeeping. A disclosure keeps the depth visible
+ * and one click away.
+ *
+ * The `data-level` attribute is set on <html> before first paint by the inline
+ * script in astro.config.mjs, so nothing reflows on load.
+ */
+
+.ff-level-section {
+  margin-block: var(--ff-space-4);
+}
+
+/* Above the reader's level: collapse to a labelled disclosure. */
+:root[data-level='beginner'] .ff-level-section[data-min-level='intermediate'],
+:root[data-level='beginner'] .ff-level-section[data-min-level='advanced'],
+:root[data-level='intermediate'] .ff-level-section[data-min-level='advanced'] {
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-md);
+  background: var(--ff-surface-raised);
+  padding: 0;
+}
+
+/* At or below the reader's level: render inline, no chrome, always open. */
+:root[data-level='advanced'] .ff-level-section,
+:root[data-level='intermediate'] .ff-level-section:not([data-min-level='advanced']),
+:root[data-level='beginner'] .ff-level-section[data-min-level='beginner'] {
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+:root[data-level='advanced'] .ff-level-section > summary,
+:root[data-level='intermediate']
+  .ff-level-section:not([data-min-level='advanced'])
+  > summary,
+:root[data-level='beginner'] .ff-level-section[data-min-level='beginner'] > summary {
+  display: none;
+}
+
+.ff-level-section > summary {
+  cursor: pointer;
+  padding: var(--ff-space-3) var(--ff-space-4);
+  font-size: var(--ff-text-sm);
+  font-weight: 600;
+  color: var(--ff-text-muted);
+  list-style: none;
+}
+
+.ff-level-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ff-level-section > summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-inline-end: var(--ff-space-2);
+  transition: transform 120ms ease;
+}
+
+.ff-level-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.ff-level-section > summary:hover {
+  color: var(--ff-text);
+}
+
+.ff-level-section > *:not(summary) {
+  padding-inline: var(--ff-space-4);
+}
+
+:root[data-level='advanced'] .ff-level-section > *:not(summary),
+:root[data-level='intermediate']
+  .ff-level-section:not([data-min-level='advanced'])
+  > *:not(summary),
+:root[data-level='beginner']
+  .ff-level-section[data-min-level='beginner']
+  > *:not(summary) {
+  padding-inline: 0;
+}
+
+/* -------------------------------------------------------------------------
+   The toggle control itself
+   ------------------------------------------------------------------------- */
+
+.ff-level-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--ff-space-2);
+}
+
+.ff-level-toggle__label {
+  font-size: var(--ff-text-xs);
+  color: var(--ff-text-muted);
+  white-space: nowrap;
+}
+
+.ff-level-toggle__group {
+  display: inline-flex;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-sm);
+  overflow: hidden;
+}
+
+.ff-level-toggle__option {
+  appearance: none;
+  border: 0;
+  background: var(--ff-surface);
+  color: var(--ff-text-muted);
+  font-size: var(--ff-text-xs);
+  font-family: inherit;
+  padding: var(--ff-space-1) var(--ff-space-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ff-level-toggle__option + .ff-level-toggle__option {
+  border-inline-start: 1px solid var(--ff-border);
+}
+
+.ff-level-toggle__option:hover {
+  background: var(--ff-surface-sunken);
+  color: var(--ff-text);
+}
+
+.ff-level-toggle__option[aria-pressed='true'] {
+  background: var(--ff-accent-surface);
+  color: var(--ff-accent);
+  font-weight: 600;
+}
+
+/* Narrow screens: the toggle stays reachable in the header, but the "Level:"
+   label is dropped rather than the control being buried in the drawer. */
+@media (max-width: 50rem) {
+  .ff-level-toggle__label {
+    display: none;
+  }
+}

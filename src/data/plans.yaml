@@ -1,0 +1,19 @@
+# Subscription plans. Schema: src/schemas/data.ts (planSchema).
+# Spec: docs/04-data-schemas.md
+#
+# THE MOST TRUST-CRITICAL FILE ON THE SITE.
+#
+# Rules (docs/07 ADR-003, .claude/agents/data-verifier.md):
+#   - Every value is verified against the PROVIDER'S OWN pricing page.
+#     Never an aggregator, a blog, or a search result summary.
+#   - Never fabricate a value to fill a field. `null`, "not published", and
+#     confidence: community-reported are correct answers.
+#   - `unit: opaque` with `stated_capacity: null` is expected and normal —
+#     several providers do not publish hard numbers.
+#   - Update `last_verified` only for fields you actually checked, and only to
+#     the date you checked them.
+#
+# Populated in M1-T1. Left empty deliberately: seeding this with plausible
+# numbers before verification would put unverified pricing on a site whose whole
+# premise is being trustworthy about pricing.
+[]

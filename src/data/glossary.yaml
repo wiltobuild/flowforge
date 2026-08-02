@@ -1,0 +1,12 @@
+# Glossary. Schema: src/schemas/data.ts (glossarySchema).
+# Spec: docs/04-data-schemas.md
+#
+# Powers site-wide hover tooltips (M3-T4). `short` IS the tooltip: it must be
+# ≤140 characters and must stand alone without the surrounding page.
+#
+# Beginner-level terms are auto-linked aggressively; advanced terms only in
+# beginner and intermediate contexts, so advanced pages are not peppered with
+# underlines.
+#
+# Populated in M3-T4.
+[]

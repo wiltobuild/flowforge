@@ -1,0 +1,64 @@
+---
+/**
+ * Wraps a section of a page that belongs to a deeper reading level.
+ *
+ * Above the reader's level it renders as a collapsed disclosure; at or below,
+ * it renders inline with no chrome. Either way the content stays in the DOM, so
+ * in-page search, deep links, and copy-paste keep working — and the reader can
+ * see that more depth exists rather than being silently gatekept from it
+ * (docs/01).
+ *
+ * Usage in MDX:
+ *   <LevelSection minLevel="advanced" summary="Token economics">
+ *     ...
+ *   </LevelSection>
+ */
+import type { LEVELS } from '../schemas/taxonomy';
+
+interface Props {
+  /** Minimum reading level at which this content renders inline. */
+  minLevel: (typeof LEVELS)[number];
+  /** Label shown when collapsed. Describe the content, not the action. */
+  summary: string;
+}
+
+const { minLevel, summary } = Astro.props;
+
+const DEFAULT_SUMMARY: Record<Props['minLevel'], string> = {
+  beginner: 'More detail',
+  intermediate: 'Show intermediate detail',
+  advanced: 'Show advanced detail',
+};
+---
+
+<details class="ff-level-section" data-min-level={minLevel}>
+  <summary>{summary || DEFAULT_SUMMARY[minLevel]}</summary>
+  <slot />
+</details>
+
+<script>
+  /**
+   * Deep links must win over the level filter: if the URL targets something
+   * inside a collapsed section, open it. Otherwise the link appears broken.
+   */
+  function openTargetedSections(): void {
+    const { hash } = window.location;
+    if (!hash || hash.length < 2) return;
+
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    for (const section of document.querySelectorAll<HTMLDetailsElement>(
+      'details.ff-level-section',
+    )) {
+      if (section.contains(target)) {
+        section.open = true;
+        target.scrollIntoView({ block: 'start' });
+      }
+    }
+  }
+
+  openTargetedSections();
+  window.addEventListener('hashchange', openTargetedSections);
+  document.addEventListener('astro:page-load', openTargetedSections);
+</script>

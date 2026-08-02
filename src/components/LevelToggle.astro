@@ -1,0 +1,123 @@
+---
+/**
+ * Global reading-level control. Spec: docs/01-information-architecture.md.
+ *
+ * Level is a FILTER, not a section: one page serves beginner through advanced,
+ * and this control decides how much of it is expanded. Pages are never forked
+ * by level (AGENTS.md golden rule 4).
+ *
+ * The initial value is applied to <html> before first paint by the inline
+ * script in astro.config.mjs; this component only handles interaction.
+ */
+import { LEVELS } from '../schemas/taxonomy';
+
+const OPTION_LABELS: Record<(typeof LEVELS)[number], string> = {
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
+};
+---
+
+{/*
+  Starlight renders this slot twice — once in the desktop header, once in the
+  mobile menu. So this component must be safe to instantiate more than once:
+  no element ids (they would duplicate, which is invalid HTML and breaks
+  aria-labelledby), and a single shared live region created at runtime rather
+  than one per instance (otherwise changes get announced twice).
+*/}
+<div class="ff-level-toggle">
+  <span class="ff-level-toggle__label" aria-hidden="true">Level</span>
+  <div
+    class="ff-level-toggle__group"
+    role="group"
+    aria-label="Reading level"
+    data-ff-level-toggle
+  >
+    {
+      LEVELS.map((value) => (
+        <button
+          type="button"
+          class="ff-level-toggle__option"
+          data-level-value={value}
+          aria-pressed="false"
+        >
+          {OPTION_LABELS[value]}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { LEVELS } from '../schemas/taxonomy';
+
+  const STORAGE_KEY = 'ff-level';
+  const FALLBACK = 'beginner';
+
+  type Level = (typeof LEVELS)[number];
+
+  const isLevel = (value: unknown): value is Level =>
+    typeof value === 'string' && (LEVELS as readonly string[]).includes(value);
+
+  function currentLevel(): Level {
+    const fromDom = document.documentElement.dataset.level;
+    return isLevel(fromDom) ? fromDom : FALLBACK;
+  }
+
+  function apply(level: Level, announce: boolean): void {
+    document.documentElement.dataset.level = level;
+
+    try {
+      localStorage.setItem(STORAGE_KEY, level);
+    } catch {
+      // Private browsing or storage disabled. The toggle still works for this
+      // page view; it just will not persist. Not worth surfacing to the user.
+    }
+
+    for (const group of document.querySelectorAll('[data-ff-level-toggle]')) {
+      for (const button of group.querySelectorAll<HTMLButtonElement>(
+        '[data-level-value]',
+      )) {
+        const isActive = button.dataset.levelValue === level;
+        button.setAttribute('aria-pressed', String(isActive));
+      }
+    }
+
+    if (announce) liveRegion().textContent = `Reading level set to ${level}.`;
+  }
+
+  /**
+   * One shared live region for the whole document. Created lazily so that
+   * rendering the toggle twice does not announce every change twice.
+   */
+  function liveRegion(): HTMLElement {
+    const existing = document.querySelector<HTMLElement>('[data-ff-level-status]');
+    if (existing) return existing;
+
+    const region = document.createElement('p');
+    region.dataset.ffLevelStatus = '';
+    region.className = 'sr-only';
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    document.body.append(region);
+    return region;
+  }
+
+  function init(): void {
+    apply(currentLevel(), false);
+
+    for (const group of document.querySelectorAll('[data-ff-level-toggle]')) {
+      group.addEventListener('click', (event) => {
+        const target = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>(
+          '[data-level-value]',
+        );
+        const value = target?.dataset.levelValue;
+        if (isLevel(value)) apply(value, true);
+      });
+    }
+  }
+
+  init();
+  // Starlight uses view transitions; re-bind after navigation.
+  document.addEventListener('astro:page-load', init);
+</script>
