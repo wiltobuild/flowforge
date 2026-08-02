@@ -1,0 +1,81 @@
+---
+/**
+ * Copying requires a little browser code because clipboard permission and the
+ * confirmation state only exist there. The handler is shared across instances
+ * so repeated blocks do not ship repeated behavior.
+ */
+interface Props {
+  content?: string;
+  fileName?: string;
+}
+
+const { content, fileName } = Astro.props;
+const hasContent = Boolean(content?.trim());
+const parts = content?.split(/(\{\{[^{}]+\}\})/g) ?? [];
+const hasVariables = /\{\{[^{}]+\}\}/.test(content ?? '');
+const downloadHref = hasContent && fileName
+  ? `data:text/plain;charset=utf-8,${encodeURIComponent(content!)}`
+  : undefined;
+---
+
+<section class="ff-copy-block" aria-label="Copyable content">
+  {
+    hasContent ? (
+      <>
+        <div class="ff-copy-block__actions">
+          <button class="ff-copy-block__button" type="button" data-ff-copy-button>Copy</button>
+          {downloadHref && <a href={downloadHref} download={fileName}>Download {fileName}</a>}
+        </div>
+        {/*
+          tabindex="0" is required, not decorative: a horizontally scrollable
+          region that cannot be focused is unreachable by keyboard, and axe
+          fails the build on it (scrollable-region-focusable). docs/06 requires
+          the scroll container, so the container has to be focusable.
+        */}
+        <pre class="ff-copy-block__scroll" tabindex="0"><code data-ff-copy-content>{parts.map((part) => part.startsWith('{{') && part.endsWith('}}') ? <mark>{part}</mark> : part)}</code></pre>
+        {hasVariables && <p class="ff-copy-block__hint"><mark>{'{{variables}}'}</mark> are values you replace before using this.</p>}
+        <p class="ff-copy-block__feedback" data-ff-copy-feedback aria-live="polite"></p>
+      </>
+    ) : (
+      <p class="ff-copy-block__empty" role="status">Nothing to copy yet.</p>
+    )
+  }
+</section>
+
+<script>
+  function bindCopyButtons(): void {
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-ff-copy-button]')) {
+      if (button.dataset.ffCopyBound === 'true') continue;
+      button.dataset.ffCopyBound = 'true';
+      button.addEventListener('click', async () => {
+        const block = button.closest<HTMLElement>('.ff-copy-block');
+        const content = block?.querySelector<HTMLElement>('[data-ff-copy-content]')?.innerText;
+        const feedback = block?.querySelector<HTMLElement>('[data-ff-copy-feedback]');
+        if (!content || !feedback) return;
+        try {
+          await navigator.clipboard.writeText(content);
+          button.textContent = 'Copied';
+          feedback.textContent = 'Copied to clipboard.';
+          window.setTimeout(() => { button.textContent = 'Copy'; }, 1600);
+        } catch {
+          feedback.textContent = 'Copy failed. Select the text and copy it manually.';
+        }
+      });
+    }
+  }
+
+  bindCopyButtons();
+  document.addEventListener('astro:page-load', bindCopyButtons);
+</script>
+
+<style>
+  .ff-copy-block { display: grid; gap: var(--ff-space-2); margin-block: var(--ff-space-6); }
+  .ff-copy-block__actions { display: flex; flex-wrap: wrap; gap: var(--ff-space-3); align-items: center; font-size: var(--ff-text-sm); }
+  .ff-copy-block__button { padding: var(--ff-space-2) var(--ff-space-3); border: 1px solid var(--ff-accent); border-radius: var(--ff-radius-sm); background: var(--ff-accent); color: var(--ff-text-inverse); font: inherit; font-weight: 700; cursor: pointer; }
+  .ff-copy-block__actions a { color: var(--ff-accent); }
+  .ff-copy-block__scroll { max-inline-size: 100%; margin: 0; padding: var(--ff-space-4); overflow-x: auto; border: 1px solid var(--ff-border); border-radius: var(--ff-radius-md); background: var(--ff-surface-sunken); color: var(--ff-text); font-size: var(--ff-text-sm); line-height: var(--ff-leading-normal); }
+  .ff-copy-block mark { padding-inline: var(--ff-space-1); border-radius: var(--ff-radius-sm); background: var(--ff-warn-surface); color: var(--ff-warn); }
+  .ff-copy-block__hint, .ff-copy-block__feedback, .ff-copy-block__empty { margin: 0; color: var(--ff-text-muted); font-size: var(--ff-text-sm); line-height: var(--ff-leading-normal); }
+  .ff-copy-block__feedback:empty { display: none; }
+  .ff-copy-block__empty { padding: var(--ff-space-3); border: 1px solid var(--ff-warn-border); border-radius: var(--ff-radius-md); background: var(--ff-warn-surface); color: var(--ff-warn); }
+</style>

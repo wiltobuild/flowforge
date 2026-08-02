@@ -38,6 +38,10 @@ export default defineConfig({
         // Renders Starlight's theme picker plus our level toggle, rather than
         // reimplementing the header.
         ThemeSelect: './src/components/ThemeSelect.astro',
+        // Prepends the mandatory 2–3 `next` links to Starlight's own footer.
+        // Overriding this slot rather than the page layout means every content
+        // page gets the block for free and we inherit future footer changes.
+        Footer: './src/components/Footer.astro',
       },
       head: [
         {

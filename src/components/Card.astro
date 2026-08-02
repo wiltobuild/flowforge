@@ -1,0 +1,49 @@
+---
+/**
+ * This deliberately has no variants: changing the preview shape by context
+ * makes scanning search, indexes, and task results needlessly harder.
+ */
+import QuotaBadge from './QuotaBadge.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  href?: string;
+  level?: string;
+  quota?: string;
+  timeEstimate?: string;
+  tags?: string[];
+}
+
+const { title, description, href, level, quota, timeEstimate, tags = [] } = Astro.props;
+const hasTitle = Boolean(title?.trim());
+---
+
+<article class:list={['ff-card', !hasTitle && 'ff-card--error']}>
+  {
+    hasTitle ? (
+      href ? <a class="ff-card__title" href={href}>{title}</a> : <h2 class="ff-card__title">{title}</h2>
+    ) : (
+      <p class="ff-card__error" role="status">Card title unavailable.</p>
+    )
+  }
+  {description?.trim() ? <p class="ff-card__description">{description}</p> : <p class="ff-card__empty">No summary is available yet.</p>}
+  <div class="ff-card__meta" aria-label="Card details">
+    {level && <span class="ff-card__level">Level: {level}</span>}
+    <QuotaBadge value={quota} />
+    {timeEstimate && <span>Time: {timeEstimate}</span>}
+  </div>
+  {tags.length > 0 && <ul class="ff-card__tags" aria-label="Tags">{tags.map((tag) => <li>{tag}</li>)}</ul>}
+</article>
+
+<style>
+  .ff-card { display: grid; gap: var(--ff-space-3); padding: var(--ff-space-4); border: 1px solid var(--ff-border); border-radius: var(--ff-radius-md); background: var(--ff-surface-raised); box-shadow: var(--ff-shadow-sm); }
+  .ff-card--error { border-color: var(--ff-warn-border); }
+  .ff-card__title { margin: 0; color: var(--ff-text); font-size: var(--ff-text-lg); line-height: var(--ff-leading-tight); }
+  a.ff-card__title:hover { color: var(--ff-accent-hover); }
+  .ff-card__description, .ff-card__empty, .ff-card__error { margin: 0; font-size: var(--ff-text-base); line-height: var(--ff-leading-normal); }
+  .ff-card__empty { color: var(--ff-text-muted); }
+  .ff-card__error { color: var(--ff-warn); font-weight: 700; }
+  .ff-card__meta, .ff-card__tags { display: flex; flex-wrap: wrap; gap: var(--ff-space-2); align-items: center; margin: 0; padding: 0; color: var(--ff-text-muted); font-size: var(--ff-text-sm); }
+  .ff-card__level, .ff-card__tags li { padding: var(--ff-space-1) var(--ff-space-2); border: 1px solid var(--ff-border); border-radius: var(--ff-radius-sm); list-style: none; }
+</style>
