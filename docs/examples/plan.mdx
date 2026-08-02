@@ -1,0 +1,52 @@
+---
+title: A verified subscription tier
+description: A copy-ready plan page that explains the lived experience of a subscription limit without repeating data.
+type: plan
+level: beginner
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: volatile
+role: [builder, operator]
+task: [code, write, research]
+tool: [chat-ui]
+plan: [chatgpt-plus]
+quota: moderate
+effort: 5min
+plan_id: example-plan-id-awaiting-verification
+next:
+  - label: Plans and usage
+    link: /plans/
+  - label: Field reports
+    link: /plans/usage/field-reports/
+---
+
+<!-- Replace plan_id only with an ID that already exists in src/data/plans.yaml. -->
+
+## Who this is for
+
+This tier suits a person who uses an AI assistant regularly for focused work and can pause or switch tasks when a busy period catches up with them. It is not a promise of uninterrupted capacity for a deadline-critical, all-day run.
+
+## What you get
+
+Render the plan's included products, published limits, billing notes, and source link from `plans.yaml`. Use this section to orient the reader, not to copy volatile price or capacity details into prose.
+
+## What it's good at
+
+It is a practical fit for a mix of short drafting, analysis, and bounded build tasks where each result can be reviewed before starting the next. The value is convenience and continuity, not unlimited parallel work.
+
+## What it can't do
+
+It cannot guarantee a particular number of requests, a specific model at every moment, or capacity during unusually high demand. Do not present the tier as a substitute for a workflow that needs a contractual service level.
+
+## How the limits feel
+
+The disruptive moment is usually not the first warning; it is discovering that the next substantial task must wait while you are mid-flow. Explain the provider's actual hard-stop, downgrade, or mixed behavior here in plain language, then describe a safe fallback such as reviewing prior output or preparing the next brief.
+
+## Who should pick something else
+
+Choose a lower tier when occasional, lightweight use is enough. Choose a higher tier or a separate workflow when multiple long tasks, frequent retries, or time-sensitive delivery make a pause materially expensive.
+
+## Verify
+
+Link to the provider's official pricing page from the matching `plans.yaml` record and set `last_verified` to the date you checked it. Never use an aggregator or invent a capacity when the provider has not published one.

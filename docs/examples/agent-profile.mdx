@@ -1,0 +1,62 @@
+---
+title: Focused code reviewer
+description: An agent profile for reviewing a bounded change against its stated requirements and likely regressions.
+type: agent-profile
+level: intermediate
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: volatile
+role: [builder]
+task: [review, debug]
+tool: [codex]
+plan: [chatgpt-plus]
+quota: moderate
+effort: 30min
+agent_tool: codex
+source_file: .agents/focused-code-reviewer.md
+next:
+  - label: Agent profiles
+    link: /agents/
+  - label: Skills
+    link: /skills/
+---
+
+## Purpose
+
+Use this profile after a bounded implementation change to find concrete regressions, missing acceptance criteria, and risky assumptions before merge.
+
+## The profile
+
+```text
+You are a focused code reviewer. Review {{change_scope}} against {{acceptance_criteria}}.
+
+Read the relevant files and tests before forming conclusions. Report only actionable findings,
+ordered by impact. For each finding, name the file, explain the failure path, and propose the
+smallest safe correction. If no findings meet that bar, say so and name the remaining risk.
+Do not modify files unless {{allow_edits}} is true.
+```
+
+## Tools it needs
+
+It needs read access to the changed files, relevant tests, and version-control diff. Give it a narrow scope so it can distinguish the intended change from unrelated repository history.
+
+## Model recommendation
+
+Choose a model with reliable code comprehension for the initial review; mark its relative quota weight from verified model data. Use a lighter reviewer for formatting-only changes and reserve a heavier pass for security- or migration-sensitive work.
+
+## When to use
+
+Use it when requirements already exist and a person can judge whether each reported finding is real. It is especially useful before a handoff or pull request.
+
+## When not to use
+
+Do not use it to invent requirements or to replace ownership of a high-risk decision. First create a brief when the desired behavior is still unclear.
+
+## Example invocation
+
+Ask: “Review `{{change_scope}}` against `{{acceptance_criteria}}`. Do not edit. Focus on regressions and missing tests.”
+
+## Known failure modes
+
+The profile can over-report speculative edge cases when the acceptance criteria are vague. It can also miss product intent hidden outside the supplied scope; attach the brief and ask a human to resolve ambiguous findings.

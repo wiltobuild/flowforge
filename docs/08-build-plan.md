@@ -26,7 +26,7 @@ more than having ten half-built sections.
 | M0-T8 | Core components: card, badges (quota, staleness, status), copy block, next-links | T3 | Each has empty/error states; `next` missing fails validation |
 | M0-T9 | CI: build, schema validation, internal link check, a11y scan | T4 | Runs on PR, blocks merge on failure |
 | M0-T10 | Deploy pipeline to static host, preview builds on PR | T1 | Live URL; PR previews working |
-| M0-T11 | One complete, schema-valid copy-paste example per content type in `docs/examples/` | T4 | All 10 validate; `CONTRIBUTING.md` links to them |
+| M0-T11 | One complete, schema-valid copy-paste example per content type in `docs/examples/` | T4 | All 10 validate their schema and body structure; `plan`/`model` reference integrity is explicitly deferred while their intentionally empty data collections await M1 verification; `CONTRIBUTING.md` links to them |
 | M0-T12 | Issue templates: field report, suggest a prompt, page is wrong, data is stale | T1 | All four render in the GitHub UI |
 
 **M0 exit:** an empty site that cannot accept a badly-formed page.

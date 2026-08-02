@@ -1,0 +1,59 @@
+---
+title: Acceptance-criteria checker
+description: A reusable skill that compares a proposed change with explicit acceptance criteria before handoff.
+type: skill
+level: intermediate
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: stable
+role: [builder, operator]
+task: [review, ship]
+tool: [codex]
+plan: [chatgpt-plus]
+quota: light
+effort: 30min
+next:
+  - label: Skills
+    link: /skills/
+  - label: Agent profiles
+    link: /agents/
+---
+
+## What it does
+
+This skill turns a written acceptance list into a short verification pass, separating confirmed evidence from assumptions that still need a human decision.
+
+## Trigger description
+
+Invoke it when a task has explicit acceptance criteria and a proposed result is ready to review, but before the work is handed off or declared complete.
+
+## File structure
+
+```text
+acceptance-criteria-checker/
+  SKILL.md
+```
+
+## Full source
+
+```md
+---
+name: acceptance-criteria-checker
+description: Compare a proposed change with explicit acceptance criteria before handoff.
+---
+
+# Acceptance-criteria checker
+
+For each item in {{acceptance_criteria}}, find direct evidence in {{change_scope}}.
+Return a checklist with `met`, `not met`, or `needs decision`; cite the relevant file or output.
+Do not infer a criterion is met without evidence. End with the smallest next action.
+```
+
+## Customizing it
+
+Replace the evidence format with the artifact your team reviews: file paths for code, headings for documents, or test names for a release. Keep the three outcome labels so uncertainty remains visible.
+
+## Testing notes
+
+Test with one criterion that is clearly met, one that is clearly missing, and one that cannot be decided from the supplied material. The skill is working only if it refuses to guess on the third.

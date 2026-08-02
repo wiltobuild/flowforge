@@ -1,0 +1,46 @@
+---
+title: Brief before build
+description: A planning pattern that turns a request into a shared, testable brief before implementation begins.
+type: pattern
+kind: pattern
+level: beginner
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: stable
+role: [builder, operator, strategist]
+task: [plan, code, collaborate]
+tool: [agnostic]
+plan: [free]
+quota: light
+effort: 5min
+next:
+  - label: Planning playbooks
+    link: /playbooks/
+  - label: Prompt library
+    link: /prompting/
+---
+
+## Problem it solves
+
+Starting from a vague request invites polished work that solves the wrong problem. A brief gives the person and the assistant one shared target before effort accumulates.
+
+## Structure
+
+```text
+request -> assumptions -> brief -> review -> build
+```
+
+Each arrow is a checkpoint: do not advance while a decision is still hidden inside an assumption.
+
+## Example
+
+A teammate asks for a launch page. First capture the audience, conversion action, required proof, and approval owner. Review that brief together; only then draft the page and check it against the agreed outcome.
+
+## Tradeoffs
+
+The pattern adds a small upfront step and can feel slow for trivial work. It earns its cost when revision, handoff, or a wrong decision would take longer than writing the brief.
+
+## Related patterns
+
+Use a review-against-criteria pattern after the build, and a handoff brief when the work crosses sessions or people.

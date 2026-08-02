@@ -1,0 +1,93 @@
+---
+title: Decision note template
+description: A compact starter file for recording a decision, its evidence, tradeoffs, owner, and revisit trigger.
+type: template
+level: beginner
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: stable
+role: [builder, operator, strategist]
+task: [plan, collaborate, write]
+tool: [agnostic]
+plan: [free]
+quota: n-a
+effort: 5min
+file_name: decision-note.md
+file_type: markdown
+next:
+  - label: Planning playbooks
+    link: /playbooks/
+  - label: Templates
+    link: /templates/
+---
+
+## What it's for
+
+Use this file when a choice affects the next steps and future readers need to understand why one option was chosen over another.
+
+## The file
+
+```md
+# {{decision_title}}
+
+**Owner:** {{owner}}
+**Date:** {{date}}
+**Status:** proposed | decided | revisiting
+
+## Decision
+
+{{decision_in_one_sentence}}
+
+## Context
+
+{{facts_and_constraints}}
+
+## Options considered
+
+- **{{option_one}}** — {{tradeoff}}
+- **{{option_two}}** — {{tradeoff}}
+
+## Evidence
+
+{{links_tests_or_feedback}}
+
+## Revisit when
+
+{{trigger_for_reconsidering}}
+```
+
+## How to customize
+
+Add only fields that change a future decision. For a technical choice, include compatibility and rollback; for a content choice, include audience and approval owner. Keep evidence as links or named artifacts, not recollection.
+
+## Filled-in example
+
+```md
+# Keep onboarding to one guided path
+
+**Owner:** @{{owner}}
+**Date:** {{date}}
+**Status:** decided
+
+## Decision
+
+Start new members with one guided path before exposing advanced configuration.
+
+## Context
+
+Early feedback showed that too many choices delayed the first useful action.
+
+## Options considered
+
+- **One guided path** — faster first success, less immediate flexibility.
+- **Several entry paths** — more choice, more decision overhead.
+
+## Evidence
+
+{{research_or_feedback_link}}
+
+## Revisit when
+
+Members complete the path but cannot find their next task.
+```

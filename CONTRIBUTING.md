@@ -51,13 +51,30 @@ sites become unnavigable, so the bar is high.
 
 ### Step 2 — copy the example for your type
 
-**Copy the complete example for your type from [`docs/examples/`](docs/examples/)** into a
-new file in that collection's directory, then edit it. Do not write frontmatter from
-scratch — you will miss a required field and the build will reject it.
+**Copy the complete example for your type**, paste it into that collection's directory,
+then edit it. Do not write frontmatter from scratch — you will miss a required field and
+the build will reject it.
 
-> Examples are authored in build task M0-T11. Until then, derive frontmatter from
-> [`docs/02-content-types.md`](docs/02-content-types.md) and expect to iterate on
-> validation errors.
+| Type | Example | Use it for |
+|---|---|---|
+| `concept` | [concept.mdx](docs/examples/concept.mdx) | Vendor-neutral explanation of how something works |
+| `plan` | [plan.mdx](docs/examples/plan.mdx) | A subscription tier |
+| `model` | [model.mdx](docs/examples/model.mdx) | A single model's qualitative profile |
+| `prompt` | [prompt.mdx](docs/examples/prompt.mdx) | A reusable prompt |
+| `pattern` | [pattern.mdx](docs/examples/pattern.mdx) | A technique — or an anti-pattern |
+| `agent-profile` | [agent-profile.mdx](docs/examples/agent-profile.mdx) | A reusable subagent definition |
+| `skill` | [skill.mdx](docs/examples/skill.mdx) | A packaged capability |
+| `playbook` | [playbook.mdx](docs/examples/playbook.mdx) | Step-by-step recipe for a real task |
+| `template` | [template.mdx](docs/examples/template.mdx) | A downloadable artifact |
+| `showcase` | [showcase.mdx](docs/examples/showcase.mdx) | A cohort project |
+
+Every example is schema-valid and validated in CI, so an unedited copy always builds.
+Two things to change before you commit: `owner` (currently `your-github-handle`) and
+`last_verified`.
+
+Note the `plan` and `model` examples carry placeholder `plan_id` / `model_id` values.
+Those must point at a record that already exists in `src/data/`, which stays empty until
+plan data is verified in M1 — replace them, never invent a record to match.
 
 ### Step 3 — follow the rules that trip people up
 

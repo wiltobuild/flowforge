@@ -1,0 +1,56 @@
+---
+title: A verified model
+description: A copy-ready model page that turns structured model data into practical selection guidance.
+type: model
+level: intermediate
+status: draft
+owner: your-github-handle
+last_verified: 2026-08-02
+volatility: volatile
+role: [builder, operator, strategist]
+task: [code, research, analyze]
+tool: [api]
+plan: [api]
+quota: moderate
+effort: 5min
+model_id: example-model-id-awaiting-verification
+next:
+  - label: Plans and usage
+    link: /plans/
+  - label: Prompt library
+    link: /prompting/
+---
+
+<!-- Replace model_id only with an ID that already exists in src/data/models.yaml. -->
+
+## At a glance
+
+Render the model's provider, modalities, capabilities, availability, and current status from `models.yaml`. Keep release dates, context limits, and pricing in the data record rather than repeating them here.
+
+## Best at
+
+Describe the work shapes where this model repeatedly helps: for example, turning a scoped brief into a first draft, inspecting a bounded set of files, or producing structured output that a person can verify.
+
+## Weak at
+
+Name the conditions that make it a poor default, such as ambiguous objectives, an underspecified source of truth, or tasks where a plausible but unverified answer would cause harm.
+
+## Quota weight
+
+Explain the relative quota weight from `models.yaml` in workflow terms. A heavier option can be worthwhile for a decisive step, but it should not be the automatic choice for routine cleanup or quick questions.
+
+## When to pick it
+
+Pick it when the task benefits from its documented capabilities and you have a clear acceptance check. Start with a small, representative slice before committing a large task to a more expensive window.
+
+## When not to
+
+Do not pick it merely because it is the newest option. Use a lighter or faster sibling when the job is simple, and pause for human review when the source material or goal remains uncertain.
+
+## Notes and gotchas
+
+Record operational details that change how someone works: whether a tool call needs explicit instructions, whether a long input should be summarized first, or whether outputs need a stricter schema. Attribute volatile claims and update this page when they change.
+
+## External signals
+
+Link to named, attributable outside observations and summarize what each observed in words. Do not turn them into a benchmark-score table or imply that an external signal is a guarantee.
