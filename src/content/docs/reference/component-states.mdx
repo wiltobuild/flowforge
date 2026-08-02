@@ -1,0 +1,59 @@
+---
+title: Component states
+description: A live reference for the site’s reusable content components.
+type: concept
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-02
+volatility: stable
+role: [builder]
+tool: [agnostic]
+plan: [free]
+quota: n-a
+effort: 5min
+next:
+  - label: Reference
+    link: /reference/
+  - label: Start here
+    link: /start/
+---
+
+import Card from '../../../components/Card.astro';
+import CopyBlock from '../../../components/CopyBlock.astro';
+import QuotaBadge from '../../../components/QuotaBadge.astro';
+import StalenessBadge from '../../../components/StalenessBadge.astro';
+import StatusBadge from '../../../components/StatusBadge.astro';
+import NextLinks from '../../../components/NextLinks.astro';
+
+This page keeps the shared components in rendered output while the content library is still being built. It also makes their fallback states visible to accessibility checks.
+
+## Card
+
+<Card title="Plan a project" description="Turn a rough idea into a small, testable plan." href="/playbooks/" level="Beginner" quota="light" timeEstimate="30 minutes" tags={['plan', 'write']} />
+
+<Card quota="unknown" />
+
+## Badges
+
+<p><QuotaBadge value="light" /> <QuotaBadge value="moderate" /> <QuotaBadge value="heavy" /> <QuotaBadge value="n-a" /> <QuotaBadge value="unknown" /></p>
+
+<p><StatusBadge status="draft" /> <StatusBadge status="review" /> <StatusBadge status="verified" /> <StatusBadge status="unknown" /></p>
+
+<StalenessBadge volatility="stable" lastVerified="2026-08-02" />
+
+<StalenessBadge volatility="volatile" lastVerified="2020-01-01" sourceUrl="https://example.com/provider" issueUrl="https://github.com/wiltobuild/flowforge/issues/new?template=page-is-wrong.yml" />
+
+<StalenessBadge volatility="unknown" />
+
+## Copy block
+
+<CopyBlock content={'Review {{pull_request}} for correctness, tests, and accessibility.'} fileName="review-checklist.txt" />
+
+<CopyBlock />
+
+## Next links
+
+<NextLinks next={[{ label: 'Start here', link: '/start/' }, { label: 'Plans and usage', link: '/plans/' }]} />
+
+<NextLinks next={[{ label: '', link: '/' }]} />

@@ -1,0 +1,34 @@
+---
+/** A verified page needs no congratulatory marker; warnings earn the space. */
+interface Props {
+  status?: string;
+}
+
+const { status } = Astro.props;
+const labels: Record<string, string> = { draft: 'Draft', review: 'In review' };
+---
+
+{
+  status === 'draft' || status === 'review' ? (
+    <span class:list={['ff-status-badge', `ff-status-badge--${status}`]}>{labels[status]}</span>
+  ) : status !== undefined && status !== 'verified' ? (
+    <span class="ff-status-badge ff-status-badge--error" role="status">Status unavailable</span>
+  ) : null
+}
+
+<style>
+  .ff-status-badge {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 1.75rem;
+    padding-inline: var(--ff-space-2);
+    border-radius: var(--ff-radius-sm);
+    font-size: var(--ff-text-xs);
+    font-weight: 700;
+    line-height: var(--ff-leading-tight);
+  }
+
+  .ff-status-badge--draft { background: var(--ff-status-draft-bg); color: var(--ff-status-draft-fg); }
+  .ff-status-badge--review { background: var(--ff-status-review-bg); color: var(--ff-status-review-fg); }
+  .ff-status-badge--error { background: var(--ff-warn-surface); color: var(--ff-warn); }
+</style>

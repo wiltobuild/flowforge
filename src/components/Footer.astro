@@ -1,0 +1,13 @@
+---
+/**
+ * Keep Starlight's footer intact and add only the site-wide continuation
+ * block. This narrow override inherits future footer improvements.
+ */
+import Default from '@astrojs/starlight/components/Footer.astro';
+import NextLinks from './NextLinks.astro';
+
+const { next } = Astro.locals.starlightRoute.entry.data;
+---
+
+<NextLinks next={next} />
+<Default />

@@ -1,0 +1,66 @@
+---
+/**
+ * A stale date is a maintenance cue, not a claim that the page is wrong.
+ * Source and correction links give readers the two useful next actions.
+ */
+import { STALENESS_DAYS, VOLATILITIES } from '../schemas/taxonomy';
+
+interface Props {
+  volatility?: string;
+  lastVerified?: Date | string;
+  sourceUrl?: string;
+  issueUrl?: string;
+}
+
+const { volatility, lastVerified, sourceUrl, issueUrl } = Astro.props;
+const date = lastVerified instanceof Date ? lastVerified : new Date(lastVerified ?? '');
+const validDate = !Number.isNaN(date.valueOf());
+const validVolatility = volatility !== undefined && (VOLATILITIES as readonly string[]).includes(volatility);
+const daysOld = validDate ? (Date.now() - date.valueOf()) / 86_400_000 : 0;
+const isStale = validDate && validVolatility && daysOld > STALENESS_DAYS[volatility as keyof typeof STALENESS_DAYS];
+const formattedDate = validDate
+  ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(date)
+  : '';
+---
+
+{
+  !validDate || !validVolatility ? (
+    <p class="ff-staleness ff-staleness--error" role="status">Verification date unavailable.</p>
+  ) : isStale ? (
+    <aside class="ff-staleness ff-staleness--stale" aria-label="Staleness notice">
+      <span>Last verified {formattedDate} — may be out of date.</span>
+      {sourceUrl ? <a href={sourceUrl}>Check the provider’s page.</a> : <span>Provider source unavailable.</span>}
+      {issueUrl && <a href={issueUrl}>Report a correction.</a>}
+    </aside>
+  ) : (
+    <span class="ff-staleness ff-staleness--current">Last verified {formattedDate}</span>
+  )
+}
+
+<style>
+  .ff-staleness {
+    font-size: var(--ff-text-sm);
+    line-height: var(--ff-leading-normal);
+  }
+
+  .ff-staleness--current {
+    display: inline-flex;
+    padding: var(--ff-space-1) var(--ff-space-2);
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    color: var(--ff-text-muted);
+  }
+
+  .ff-staleness--stale,
+  .ff-staleness--error {
+    margin: 0;
+    padding: var(--ff-space-3) var(--ff-space-4);
+    border: 1px solid var(--ff-warn-border);
+    border-radius: var(--ff-radius-md);
+    background: var(--ff-warn-surface);
+    color: var(--ff-warn);
+  }
+
+  .ff-staleness--stale { display: flex; flex-wrap: wrap; gap: var(--ff-space-2); }
+  .ff-staleness a { color: inherit; font-weight: 700; }
+</style>

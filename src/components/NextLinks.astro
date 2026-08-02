@@ -1,0 +1,28 @@
+---
+/** A page without routes onward is a dead end, so absent data is explicit. */
+interface NextLink { label: string; link: string; }
+interface Props { next?: NextLink[]; }
+
+const { next } = Astro.props;
+const validLinks = next?.filter((item) => item.label?.trim() && item.link?.trim()) ?? [];
+const isValid = validLinks.length >= 2 && validLinks.length <= 3;
+---
+
+<nav class="ff-next-links" aria-labelledby="ff-next-links-heading">
+  <h2 id="ff-next-links-heading">Next</h2>
+  {
+    isValid ? (
+      <ul>{validLinks.map((item) => <li><a href={item.link}>{item.label}</a></li>)}</ul>
+    ) : (
+      <p class="ff-next-links__error" role="status">Next links are unavailable.</p>
+    )
+  }
+</nav>
+
+<style>
+  .ff-next-links { margin-top: var(--ff-space-8); padding-top: var(--ff-space-4); border-top: 1px solid var(--ff-border); }
+  .ff-next-links h2 { margin: 0 0 var(--ff-space-3); font-size: var(--ff-text-lg); }
+  .ff-next-links ul { display: grid; gap: var(--ff-space-2); margin: 0; padding-left: var(--ff-space-6); }
+  .ff-next-links a { color: var(--ff-accent); }
+  .ff-next-links__error { margin: 0; color: var(--ff-warn); }
+</style>

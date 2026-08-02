@@ -1,0 +1,53 @@
+---
+/**
+ * Quota is relative to a subscription window, not a promise about an exact
+ * number of messages. Keeping that context in a focusable tooltip prevents a
+ * compact badge from implying more precision than the data supports.
+ */
+import { QUOTAS } from '../schemas/taxonomy';
+
+interface Props {
+  value?: string;
+}
+
+const { value } = Astro.props;
+const labels: Record<string, string> = {
+  light: 'Light quota',
+  moderate: 'Moderate quota',
+  heavy: 'Heavy quota',
+};
+const isKnown = value !== undefined && (QUOTAS as readonly string[]).includes(value);
+---
+
+{
+  value !== 'n-a' &&
+    (isKnown ? (
+      <span
+        class:list={['ff-quota-badge', `ff-quota-badge--${value}`]}
+        tabindex="0"
+        title="Relative consumption within a subscription usage window."
+      >
+        {labels[value!]}
+      </span>
+    ) : value !== undefined ? (
+      <span class="ff-quota-badge ff-quota-badge--error" role="status">Quota unavailable</span>
+    ) : null)
+}
+
+<style>
+  .ff-quota-badge {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 1.75rem;
+    padding-inline: var(--ff-space-2);
+    border-radius: var(--ff-radius-sm);
+    font-size: var(--ff-text-xs);
+    font-weight: 700;
+    line-height: var(--ff-leading-tight);
+  }
+
+  .ff-quota-badge--light { background: var(--ff-quota-light-bg); color: var(--ff-quota-light-fg); }
+  .ff-quota-badge--moderate { background: var(--ff-quota-moderate-bg); color: var(--ff-quota-moderate-fg); }
+  .ff-quota-badge--heavy { background: var(--ff-quota-heavy-bg); color: var(--ff-quota-heavy-fg); }
+  .ff-quota-badge--error { background: var(--ff-warn-surface); color: var(--ff-warn); }
+</style>
