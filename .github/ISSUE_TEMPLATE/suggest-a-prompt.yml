@@ -1,0 +1,17 @@
+name: Suggest a prompt
+description: Share a prompt you reuse or wish this site covered.
+title: "[Prompt suggestion]: "
+labels: [prompt-suggestion]
+body:
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt or idea
+      description: Paste the prompt, or describe the job it should help with.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: When it helps (optional)
+      description: A sentence about the task, tool, or result is plenty.

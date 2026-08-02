@@ -100,6 +100,14 @@ The failure mode that kills reference sites is stale facts stated confidently.
 - **Link out.** Provider pages are the source of truth for pricing; the site is a guide,
   not an authority, and should say so.
 - **Never fabricate to fill a field.** `null` and "not published" are correct answers.
+- **The field report form's Plan dropdown is a manual sync point.** GitHub Issue Forms are
+  static YAML and cannot read `src/data/`, so `.github/ISSUE_TEMPLATE/field-report.yml`
+  hardcodes its plan options. This is the one sanctioned exception to single-source-per-fact,
+  and it is load-bearing: when `plans.yaml` gains, loses, or renames a plan, the form must be
+  updated **in the same PR**, or the site starts collecting reports against plans it cannot
+  join. The dropdown deliberately carries provider-and-tier labels rather than `plan_id`
+  slugs — triage resolves the label to a real `plan_id`, so the form never has to guess at
+  an identifier that `plans.yaml` may not have minted yet.
 
 ### Verification cadence
 

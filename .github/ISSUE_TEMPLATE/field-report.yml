@@ -1,0 +1,132 @@
+name: Field report
+description: Share an estimate of how much subscription quota a real task used.
+title: "[Field report]: "
+labels: [field-report, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing a real observation. This takes about two minutes, and estimates are explicitly welcome. “About a third of my 5-hour window” is useful data.
+  # Launch-plan exception: src/data/plans.yaml is the source of truth once M1-T1 creates it.
+  # GitHub Issue Forms cannot read that file; triage maps these provider-and-tier labels to plan_id values.
+  - type: dropdown
+    id: plan_id
+    attributes:
+      label: Plan
+      description: Which subscription tier were you using?
+      options:
+        - Claude — Free
+        - Claude — Pro ($20/month)
+        - ChatGPT — Free
+        - ChatGPT — Plus ($20/month)
+    validations:
+      required: true
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Tool
+      description: Choose the tool you used for this task.
+      options:
+        - Claude Code (claude-code)
+        - Codex (codex)
+        - Cursor (cursor)
+        - GitHub Copilot (copilot)
+        - Browser chat app (chat-ui)
+        - Direct API use (api)
+        - MCP (mcp)
+        - Another specific tool (other)
+    validations:
+      required: true
+  - type: input
+    id: model_id
+    attributes:
+      label: Model (if known)
+      description: Model name or ID, if you know it; leave blank if you do not.
+      placeholder: e.g., claude-sonnet-4-5
+  - type: dropdown
+    id: task_archetype
+    attributes:
+      label: Kind of task
+      description: Pick the closest match. The slug in parentheses is retained for triage.
+      options:
+        - Greenfield feature (greenfield-feature)
+        - Refactor a module (refactor-module)
+        - Debug one issue (debug-single-issue)
+        - Explore a codebase (codebase-exploration)
+        - Write tests (write-tests)
+        - Code review (code-review)
+        - Research and synthesis (research-synthesis)
+        - Document writing (document-writing)
+        - Data analysis (data-analysis)
+        - Agent orchestration (agent-orchestration)
+        - Long conversation (long-conversation)
+    validations:
+      required: true
+  - type: input
+    id: task_description
+    attributes:
+      label: What did you do?
+      description: Briefly describe the task in 200 characters or fewer.
+      placeholder: e.g., Refactored the payment module and updated its tests.
+    validations:
+      required: true
+  - type: dropdown
+    id: scale
+    attributes:
+      label: Task size
+      description: For a refactor, medium means one module with connected files; large means changes across modules or a broad cross-cutting migration.
+      options:
+        - Small — one focused file, question, or output (small)
+        - Medium — one module or several connected files/outputs (medium)
+        - Large — multiple modules, a cross-cutting change, or many deliverables (large)
+    validations:
+      required: true
+  - type: input
+    id: window_share_pct
+    attributes:
+      label: Share of your quota window used
+      description: "Estimate from 0 to 150%. Values above 100% are valid: they mean you ran out before finishing."
+      placeholder: e.g., 35
+    validations:
+      required: true
+  - type: dropdown
+    id: hit_limit
+    attributes:
+      label: Did you hit your limit?
+      options:
+        - "No (false)"
+        - "Yes (true)"
+    validations:
+      required: true
+  - type: input
+    id: session_minutes
+    attributes:
+      label: Session length in minutes (optional)
+      description: A rough estimate is fine.
+      placeholder: e.g., 45
+  - type: dropdown
+    id: used_subagents
+    attributes:
+      label: Did you use subagents? (optional)
+      options:
+        - "No (false)"
+        - "Yes (true)"
+  - type: textarea
+    id: what_helped
+    attributes:
+      label: What helped? (optional)
+      description: Share a workaround or approach that reduced quota use or got the task unstuck.
+  - type: input
+    id: reporter
+    attributes:
+      label: Attribution (optional)
+      description: Leave this as “anonymous” to opt out of attribution, or replace it with your GitHub handle.
+      value: anonymous
+  - type: dropdown
+    id: cohort_level
+    attributes:
+      label: Cohort level (optional)
+      options:
+        - L1 (l1)
+        - L3 (l3)
+        - Other (other)

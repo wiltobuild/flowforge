@@ -42,7 +42,8 @@ Give each task only what it needs:
 | M0-T1, T2, T10 | `07-stack-decisions` |
 | M0-T3, T6, T7, T8 | `06-design-system`, `01-information-architecture` |
 | M0-T4, T5, T11 | `02-content-types`, `03-taxonomy`, `04-data-schemas` |
-| M0-T9, T12 | `03-taxonomy`, `09-content-ops` |
+| M0-T9 | `03-taxonomy`, `09-content-ops` |
+| M0-T12 | `04-data-schemas`, `09-content-ops`, `03-taxonomy` |
 | M1-T1, T2 | `04-data-schemas`, `00-product-brief` |
 | M1-T3, T4, T5, T10 | `02-content-types`, `04-data-schemas`, `00-product-brief` |
 | M1-T6, T7, T9, T11 | `05-interactive-specs`, `06-design-system`, `04-data-schemas` |

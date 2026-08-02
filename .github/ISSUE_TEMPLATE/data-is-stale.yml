@@ -1,0 +1,19 @@
+name: Data is stale
+description: Report pricing, limits, or model information that has changed.
+title: "[Stale data]: "
+labels: [data-stale]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or data item
+      placeholder: URL or a short description
+    validations:
+      required: true
+  - type: textarea
+    id: update
+    attributes:
+      label: What changed?
+      description: Include the current provider link if you have it.
+    validations:
+      required: true

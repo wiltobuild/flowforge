@@ -113,7 +113,7 @@ content at `/plans/usage/field-reports`.
 | `model_id` | slug | | If known |
 | `task_archetype` | slug | ✔ | From the archetype list below |
 | `task_description` | string | ✔ | Free text, ≤200 chars |
-| `scale` | enum | ✔ | `small` \| `medium` \| `large` — defined per archetype |
+| `scale` | enum | ✔ | `small` \| `medium` \| `large` — anchors below |
 | `window_share_pct` | number | ✔ | Reporter's estimate, 0–150. Above 100 = ran out. |
 | `hit_limit` | boolean | ✔ | |
 | `session_minutes` | number | | |
@@ -133,6 +133,24 @@ render the date.
 `data-analysis` · `agent-orchestration` · `long-conversation`
 
 Adding an archetype requires updating this file and re-checking estimator calibration.
+
+### Scale anchors (controlled vocabulary)
+
+| Value | Anchor |
+|---|---|
+| `small` | One focused file, question, or output |
+| `medium` | One module, or several connected files/outputs |
+| `large` | Multiple modules, a cross-cutting change, or many deliverables |
+
+These are deliberately **generic across archetypes** rather than defined per archetype.
+Eleven archetypes times three sizes is thirty-three definitions nobody reads; per-archetype
+nuance belongs in the submission form's help text, where the submitter actually sees it.
+
+The anchors are shared by `.github/ISSUE_TEMPLATE/field-report.yml` and the
+`field-report-triager` agent, and the two must agree. **Changing an anchor invalidates the
+comparability of every report already submitted under the old wording** — reports are
+timestamped observations, so an entry's `scale` means whatever the anchor meant on the day
+it was filed. Re-check estimator calibration if you change one, exactly as with archetypes.
 
 ### Ingestion
 
