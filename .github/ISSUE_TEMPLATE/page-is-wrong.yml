@@ -1,0 +1,19 @@
+name: This page is wrong
+description: Flag a factual error or misleading guidance.
+title: "[Page correction]: "
+labels: [page-is-wrong]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page URL
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What is wrong, and what should it say instead?
+      description: A source link is helpful when you have one.
+    validations:
+      required: true
