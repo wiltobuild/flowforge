@@ -26,7 +26,13 @@ const downloadHref = hasContent && fileName
           <button class="ff-copy-block__button" type="button" data-ff-copy-button>Copy</button>
           {downloadHref && <a href={downloadHref} download={fileName}>Download {fileName}</a>}
         </div>
-        <pre class="ff-copy-block__scroll"><code data-ff-copy-content>{parts.map((part) => part.startsWith('{{') && part.endsWith('}}') ? <mark>{part}</mark> : part)}</code></pre>
+        {/*
+          tabindex="0" is required, not decorative: a horizontally scrollable
+          region that cannot be focused is unreachable by keyboard, and axe
+          fails the build on it (scrollable-region-focusable). docs/06 requires
+          the scroll container, so the container has to be focusable.
+        */}
+        <pre class="ff-copy-block__scroll" tabindex="0"><code data-ff-copy-content>{parts.map((part) => part.startsWith('{{') && part.endsWith('}}') ? <mark>{part}</mark> : part)}</code></pre>
         {hasVariables && <p class="ff-copy-block__hint"><mark>{'{{variables}}'}</mark> are values you replace before using this.</p>}
         <p class="ff-copy-block__feedback" data-ff-copy-feedback aria-live="polite"></p>
       </>
