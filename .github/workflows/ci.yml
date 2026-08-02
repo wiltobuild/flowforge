@@ -6,6 +6,14 @@ on:
 permissions:
   contents: read
 
+env:
+  # Astro 7 requires >=22.12.0. Declared once and used by both the Node setup
+  # and the cache key, so the two can never drift apart — CI passing on a Node
+  # version the build does not support is worse than having no CI, and that is
+  # exactly the failure this workflow shipped with on its first run.
+  # Keep in step with the `engines` field in package.json.
+  NODE_VERSION: '22.12.0'
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -21,7 +29,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20.19.0
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore Node modules and Chromium
         id: dependencies
@@ -30,7 +38,7 @@ jobs:
           path: |
             node_modules
             ~/.cache/ms-playwright
-          key: ${{ runner.os }}-node-20-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
         if: steps.dependencies.outputs.cache-hit != 'true'
