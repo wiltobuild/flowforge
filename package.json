@@ -10,10 +10,15 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "validate": "astro build --silent"
+    "validate": "astro build --silent",
+    "check:build": "node scripts/build-without-warnings.mjs",
+    "check:concepts": "node scripts/check-concepts-neutrality.mjs",
+    "check:links": "node scripts/check-internal-links.mjs",
+    "check:a11y": "node scripts/scan-a11y.mjs",
+    "ci": "npm run check:build && npm run check:concepts && npm run check:links && npm run check:a11y"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.12.0"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.41.6",
@@ -23,7 +28,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.3",
     "@astrojs/check": "^0.9.10",
+    "playwright": "1.61.1",
+    "playwright-core": "1.61.1",
     "typescript": "^6.0.3"
   }
 }

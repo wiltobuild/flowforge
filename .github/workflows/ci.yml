@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  # Astro 7 requires >=22.12.0. Declared once and used by both the Node setup
+  # and the cache key, so the two can never drift apart — CI passing on a Node
+  # version the build does not support is worse than having no CI, and that is
+  # exactly the failure this workflow shipped with on its first run.
+  # Keep in step with the `engines` field in package.json.
+  NODE_VERSION: '22.12.0'
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore Node modules and Chromium
+        id: dependencies
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            node_modules
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Install Chromium
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      # astro check validates all content collection schemas before Astro builds.
+      - name: Build and validate schemas with zero warnings
+        run: npm run check:build
+
+      - name: Enforce concepts neutrality
+        run: npm run check:concepts
+
+      - name: Check rendered internal links
+        run: npm run check:links
+
+      - name: Scan rendered pages for accessibility violations
+        run: npm run check:a11y
