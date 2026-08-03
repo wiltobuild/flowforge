@@ -6,13 +6,15 @@ interface Props { next?: NextLink[]; }
 const { next } = Astro.props;
 const validLinks = next?.filter((item) => item.label?.trim() && item.link?.trim()) ?? [];
 const isValid = validLinks.length >= 2 && validLinks.length <= 3;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const hrefFor = (link: string) => link.startsWith('/') ? `${base}${link}` : link;
 ---
 
 <nav class="ff-next-links" aria-labelledby="ff-next-links-heading">
   <h2 id="ff-next-links-heading">Next</h2>
   {
     isValid ? (
-      <ul>{validLinks.map((item) => <li><a href={item.link}>{item.label}</a></li>)}</ul>
+      <ul>{validLinks.map((item) => <li><a href={hrefFor(item.link)}>{item.label}</a></li>)}</ul>
     ) : (
       <p class="ff-next-links__error" role="status">Next links are unavailable.</p>
     )

@@ -17,12 +17,14 @@ interface Props {
 
 const { title, description, href, level, quota, timeEstimate, tags = [] } = Astro.props;
 const hasTitle = Boolean(title?.trim());
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const hrefFor = (link: string) => link.startsWith('/') ? `${base}${link}` : link;
 ---
 
 <article class:list={['ff-card', !hasTitle && 'ff-card--error']}>
   {
     hasTitle ? (
-      href ? <a class="ff-card__title" href={href}>{title}</a> : <h2 class="ff-card__title">{title}</h2>
+      href ? <a class="ff-card__title" href={hrefFor(href)}>{title}</a> : <h2 class="ff-card__title">{title}</h2>
     ) : (
       <p class="ff-card__error" role="status">Card title unavailable.</p>
     )

@@ -1,16 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { base, site } from './site-config.mjs';
 
-// Site URL is set once the domain is decided (docs/10-open-questions.md Q1).
 // Sidebar structure is built in M0-T7; design tokens are wired in M0-T3.
 // This config is deliberately minimal — see docs/08-build-plan.md.
 export default defineConfig({
-  // PLACEHOLDER DOMAIN. The name is settled (FlowForge); the domain is not —
-  // docs/10-open-questions.md Q1. Required by the sitemap integration; leaving
-  // it unset emits a build warning, and AGENTS.md requires zero-warning builds.
-  // Replace before M0-T10 (deploy).
-  site: 'https://flowforge.example',
+  site,
+  base,
   integrations: [
     starlight({
       title: 'FlowForge',

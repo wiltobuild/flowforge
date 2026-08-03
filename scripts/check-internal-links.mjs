@@ -1,7 +1,9 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { base } from '../site-config.mjs';
 
-const distDir = path.resolve('dist');
+const distDir = path.resolve(process.env.DIST_DIR ?? 'dist');
+const basePath = base.replace(/\/$/, '') || '/';
 
 async function filesIn(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -26,17 +28,26 @@ function hrefsIn(html) {
 
 function routeFor(file) {
   const relative = path.relative(distDir, file).split(path.sep).join('/');
-  if (relative === 'index.html') return '/';
-  if (relative.endsWith('/index.html')) return `/${relative.slice(0, -10)}`;
-  return `/${relative}`;
+  if (relative === 'index.html') return basePath === '/' ? '/' : `${basePath}/`;
+  if (relative.endsWith('/index.html')) return `${basePath === '/' ? '' : basePath}/${relative.slice(0, -10)}`;
+  return `${basePath === '/' ? '' : basePath}/${relative}`;
 }
 
 function isExternal(href) {
   return /^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(href);
 }
 
-async function existingPage(url) {
+function pathInDist(url) {
   const pathname = decodeURIComponent(url.pathname);
+  if (basePath === '/') return pathname;
+  if (pathname === basePath) return '/';
+  if (pathname.startsWith(`${basePath}/`)) return pathname.slice(basePath.length);
+  return undefined;
+}
+
+async function existingPage(url) {
+  const pathname = pathInDist(url);
+  if (pathname === undefined) return undefined;
   const candidates = pathname.endsWith('/')
     ? [path.join(distDir, pathname, 'index.html')]
     : [

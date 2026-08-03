@@ -82,7 +82,8 @@ rather than aspirational.
 
 **Consequences:** Rules out anything needing server state — user accounts, saved progress,
 live form submission, server-side personalization. Design around it (see ADR-006). Do not
-relitigate this to add one feature.
+relitigate this to add one feature. Choosing GitHub Pages also trades away per-PR preview
+deployments; Cloudflare Pages and Netlify provide them.
 
 ---
 
