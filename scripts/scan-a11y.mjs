@@ -3,12 +3,24 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
+import { base } from '../site-config.mjs';
 
 const distDir = path.resolve('dist');
 const port = 4174;
 
+/**
+ * The site is served from a base path in production, so the built HTML asks for
+ * `/flowforge/_astro/*.css`. Serving dist/ at the web root makes every one of
+ * those 404, the pages render completely unstyled, and axe then reports
+ * spurious layout violations — target-size on every page — while quietly no
+ * longer testing the real site. Mirror the production base here instead.
+ */
+const basePath = base.replace(/\/$/, '');
+
 const server = createServer(async (request, response) => {
-  const requestPath = new URL(request.url ?? '/', 'http://localhost').pathname;
+  const rawPath = new URL(request.url ?? '/', 'http://localhost').pathname;
+  const requestPath =
+    basePath && rawPath.startsWith(basePath) ? rawPath.slice(basePath.length) || '/' : rawPath;
   const candidate = path.resolve(distDir, `.${requestPath}`);
   if (!candidate.startsWith(`${distDir}${path.sep}`) && candidate !== distDir) {
     response.writeHead(403).end();
@@ -36,7 +48,7 @@ try {
     const route = file === 'index.html' ? '/' : `/${file.replace(/index\.html$/, '')}`;
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto(`http://127.0.0.1:${port}${route}`, { waitUntil: 'networkidle' });
+    await page.goto(`http://127.0.0.1:${port}${basePath}${route}`, { waitUntil: 'networkidle' });
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'])
       .analyze();
