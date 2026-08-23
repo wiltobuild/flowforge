@@ -1,17 +1,207 @@
 # Models. Schema: src/schemas/data.ts (modelSchema).
 # Spec: docs/04-data-schemas.md
 #
-# NO BENCHMARK SCORE FIELDS. Ever. See docs/00-product-brief.md for the
-# reasoning: they go stale in weeks, they are gameable, and single-turn
-# preference scores correlate poorly with agentic reliability — which is the
-# only mode most of this audience works in.
+# NO BENCHMARK SCORE FIELDS. Ever. See docs/00-product-brief.md for the reasoning.
+# external_signals holds attributed links with a qualitative note, never a score.
 #
-# `external_signals` holds attributed links with a qualitative note. If you are
-# about to add a number to one, stop.
+# Claude models: verified live 2026-08-23 against platform.claude.com/docs (Tier 1).
+# OpenAI models: pricing/context verified live 2026-08-23 against developers.openai.com
+# (Tier 1). Their `available_on` mapping to ChatGPT consumer plans is NOT independently
+# confirmed — see the community-reported caveat on the chatgpt-* plans in plans.yaml.
 #
-# `available_on` is the ONLY place the plan↔model relationship is stored. Plans
-# do not carry a models list; plan pages derive theirs from this field. Storing
-# it both ways guarantees the two drift apart.
-#
-# Populated in M1-T2.
-[]
+# Known schema limitation (flagged for Themis / future work, not fixed this task):
+# unlike plans, models have no `confidence` field, so a model's own pricing/spec can be
+# solidly Tier-1 sourced while its plan-availability mapping is genuinely uncertain, with
+# no per-field way to say so on the model record itself. The caveat lives on the plan side
+# instead (plans.yaml billing_notes).
+
+- model_id: claude-fable-5
+  provider: Anthropic
+  display_name: Claude Fable 5
+  family: Claude 5
+  status: current
+  context_window: 1000000
+  max_output: 128000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, adaptive_thinking, caching, batch, structured_output]
+  available_on: [claude-pro, claude-max]
+  quota_weight: heavy
+  speed_tier: slow
+  reasoning_tier: frontier
+  best_at:
+    - Long-running autonomous agents
+    - Anthropic's highest overall capability, per their own model-comparison framing
+  weak_at:
+    - Noticeably slower than Sonnet or Haiku
+    - No explicit extended-thinking toggle — reasoning is always-on adaptive, not
+      configurable per request
+  api_pricing:
+    input: 10
+    output: 50
+    cached_input: 1
+    cache_write: 12.5
+    batch_input: 5
+    batch_output: 25
+  external_signals: []
+  source_url: https://platform.claude.com/docs/en/about-claude/models/overview
+  last_verified: 2026-08-23
+
+- model_id: claude-opus-5
+  provider: Anthropic
+  display_name: Claude Opus 5
+  family: Claude 5
+  status: current
+  context_window: 1000000
+  max_output: 128000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, adaptive_thinking, caching, batch, structured_output]
+  available_on: [claude-pro, claude-max]
+  quota_weight: heavy
+  speed_tier: balanced
+  reasoning_tier: frontier
+  best_at:
+    - Complex agentic coding
+    - Enterprise workloads
+  weak_at:
+    - Higher cost than Sonnet for routine, non-complex tasks
+  api_pricing:
+    input: 5
+    output: 25
+    cached_input: 0.5
+    cache_write: 6.25
+    batch_input: 2.5
+    batch_output: 12.5
+  external_signals: []
+  source_url: https://platform.claude.com/docs/en/about-claude/models/overview
+  last_verified: 2026-08-23
+
+- model_id: claude-sonnet-5
+  provider: Anthropic
+  display_name: Claude Sonnet 5
+  family: Claude 5
+  status: current
+  context_window: 1000000
+  max_output: 128000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, adaptive_thinking, caching, batch, structured_output]
+  available_on: [claude-pro, claude-max]
+  quota_weight: moderate
+  speed_tier: fast
+  reasoning_tier: strong
+  best_at:
+    - Best combination of speed and intelligence for most production agentic work
+  weak_at:
+    - Less capable than Opus or Fable on the hardest reasoning tasks
+  api_pricing:
+    input: 2
+    output: 10
+    cached_input: 0.2
+    cache_write: 2.5
+    batch_input: 1
+    batch_output: 5
+  external_signals: []
+  source_url: https://platform.claude.com/docs/en/about-claude/pricing
+  last_verified: 2026-08-23
+
+- model_id: claude-haiku-4-5
+  provider: Anthropic
+  display_name: Claude Haiku 4.5
+  family: Claude 4.5
+  status: current
+  context_window: 200000
+  max_output: 64000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, extended_thinking, caching, batch, structured_output]
+  available_on: [claude-pro, claude-max]
+  quota_weight: light
+  speed_tier: fast
+  reasoning_tier: strong
+  best_at:
+    - Fastest Claude model
+    - Cheapest per-token Claude option
+    - Explicit extended-thinking toggle when needed, unlike the always-on Claude 5 family
+  weak_at:
+    - Smaller 200k context window vs. 1M on the current Claude 5 models
+    - Not positioned for the most complex agentic coding
+  api_pricing:
+    input: 1
+    output: 5
+    cached_input: 0.1
+    cache_write: 1.25
+    batch_input: 0.5
+    batch_output: 2.5
+  external_signals: []
+  source_url: https://platform.claude.com/docs/en/about-claude/models/overview
+  last_verified: 2026-08-23
+
+- model_id: gpt-5.6-sol
+  provider: OpenAI
+  display_name: GPT-5.6 Sol
+  family: GPT-5.6
+  status: current
+  context_window: 1050000
+  max_output: 128000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, structured_output, caching, batch]
+  available_on: [chatgpt-pro]
+  quota_weight: heavy
+  reasoning_tier: frontier
+  best_at:
+    - Highest-capability tier in the GPT-5.6 family
+  weak_at:
+    - Most expensive GPT-5.6 tier per token
+  api_pricing:
+    input: 4
+    output: 20
+    cached_input: 0.4
+  external_signals: []
+  source_url: https://developers.openai.com/api/docs/pricing
+  last_verified: 2026-08-23
+
+- model_id: gpt-5.6-terra
+  provider: OpenAI
+  display_name: GPT-5.6 Terra
+  family: GPT-5.6
+  status: current
+  context_window: 1050000
+  max_output: 128000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, structured_output, caching, batch]
+  available_on: [chatgpt-plus, chatgpt-pro]
+  quota_weight: moderate
+  reasoning_tier: strong
+  best_at:
+    - Mid-tier balance of cost and capability in the GPT-5.6 family
+  weak_at:
+    - Less capable than Sol on the hardest tasks
+  api_pricing:
+    input: 2
+    output: 12
+    cached_input: 0.2
+  external_signals: []
+  source_url: https://developers.openai.com/api/docs/pricing
+  last_verified: 2026-08-23
+
+- model_id: gpt-5.6-luna
+  provider: OpenAI
+  display_name: GPT-5.6 Luna
+  family: GPT-5.6
+  status: current
+  context_window: 1050000
+  max_output: 128000
+  modalities: [text, image]
+  capabilities: [tool_use, vision, structured_output, caching, batch]
+  available_on: [chatgpt-free, chatgpt-plus, chatgpt-pro]
+  quota_weight: light
+  reasoning_tier: basic
+  best_at:
+    - Cheapest, fastest GPT-5.6 tier
+  weak_at:
+    - Not positioned for complex agentic coding
+  api_pricing:
+    input: 0.2
+    output: 1.2
+    cached_input: 0.02
+  external_signals: []
+  source_url: https://developers.openai.com/api/docs/pricing
+  last_verified: 2026-08-23

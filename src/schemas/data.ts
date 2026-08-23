@@ -12,6 +12,35 @@ import { confidence, level, quota, taskArchetype, tool } from './taxonomy';
  * exists to avoid.
  */
 
+/**
+ * Strict ISO 8601 date (YYYY-MM-DD), accepted as a string and produced as a Date.
+ *
+ * `src/loaders/yaml-file.ts` hands these schemas plain strings — the `yaml`
+ * package's default (YAML 1.2 core) schema, unlike YAML 1.1, does not auto-resolve
+ * bare date scalars to timestamps. `z.coerce.date()` looks like the fix but is
+ * unsafe here: JS's Date parser silently rolls '2026-02-30' forward to March 2
+ * rather than rejecting it, and accepts ambiguous or partial strings too. On
+ * `last_verified`/`date` fields — the mechanism this site relies on for dated,
+ * falsifiable claims (docs/03, docs/04) — a typo'd date silently becoming a
+ * different, wrong date defeats the whole point. This validates the exact
+ * YYYY-MM-DD shape and round-trips through Date to reject anything that isn't a
+ * real calendar date, then hands callers a real Date object.
+ */
+const isoDate = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'must be an ISO 8601 date (YYYY-MM-DD)')
+  .transform((value, ctx) => {
+    const date = new Date(`${value}T00:00:00.000Z`);
+    if (date.toISOString().slice(0, 10) !== value) {
+      ctx.addIssue({
+        code: 'custom',
+        message: `${value} is not a real calendar date`,
+      });
+      return z.NEVER;
+    }
+    return date;
+  });
+
 // ---------------------------------------------------------------------------
 // plans.yaml — the most volatile and most trust-critical file on the site
 // ---------------------------------------------------------------------------
@@ -54,7 +83,7 @@ export const planSchema = z.object({
   not_for: z.array(z.string()).min(1),
   /** Must be the provider's own pricing page — never an aggregator or blog. */
   source_url: z.url(),
-  last_verified: z.date(),
+  last_verified: isoDate,
   confidence,
 });
 
@@ -88,7 +117,7 @@ export const modelSchema = z.object({
   provider: z.string().min(1),
   display_name: z.string().min(1),
   family: z.string().optional(),
-  release_date: z.date().optional(),
+  release_date: isoDate.optional(),
   status: z.enum(['current', 'legacy', 'deprecated']),
   context_window: z.number().positive().optional(),
   max_output: z.number().positive().optional(),
@@ -99,6 +128,16 @@ export const modelSchema = z.object({
         'tool_use',
         'vision',
         'extended_thinking',
+        /**
+         * Distinct from extended_thinking: always-on/automatic reasoning the
+         * model applies without an explicit opt-in toggle, vs. extended_thinking's
+         * explicit `thinking.type: "enabled"` request. Vendors that document both
+         * (e.g. Anthropic's Fable/Opus/Sonnet 5 vs. Haiku 4.5) treat them as
+         * independently-toggled capabilities, not synonyms — collapsing them
+         * loses a real, quota-relevant distinction (docs/agent/decisions.md,
+         * 2026-08-23).
+         */
+        'adaptive_thinking',
         'caching',
         'batch',
         'structured_output',
@@ -121,7 +160,7 @@ export const modelSchema = z.object({
   api_pricing: apiPricing.optional(),
   external_signals: z.array(externalSignal).default([]),
   source_url: z.url(),
-  last_verified: z.date(),
+  last_verified: isoDate,
 });
 
 // ---------------------------------------------------------------------------
@@ -135,7 +174,7 @@ export const modelSchema = z.object({
  */
 export const fieldReportSchema = z.object({
   report_id: z.string().min(1),
-  submitted: z.date(),
+  submitted: isoDate,
   plan_id: reference('plans'),
   tool,
   model_id: reference('models').optional(),
@@ -179,7 +218,7 @@ export const glossarySchema = z.object({
  */
 export const changelogSchema = z.object({
   entry_id: z.string().min(1),
-  date: z.date(),
+  date: isoDate,
   kind: z.enum(['model', 'pricing', 'limits', 'tool', 'site']),
   summary: z.string().min(1).max(200),
   affects: z.array(z.string()).default([]),

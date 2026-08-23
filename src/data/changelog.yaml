@@ -4,8 +4,26 @@
 # NOT a release feed. An entry belongs here only when it changes a
 # recommendation on this site.
 #
-# `pages_updated` is the accountability mechanism: a landscape change with no
+# pages_updated is the accountability mechanism: a landscape change with no
 # updated pages is a visible to-do rather than a silent gap.
-#
-# Populated in M1-T12.
-[]
+
+- entry_id: 2026-08-claude-weekly-limit-promo-extended
+  date: 2026-08-23
+  kind: limits
+  summary: >
+    Anthropic's +50% weekly-limit promo for Pro/Max/Team was extended again, now through
+    2026-08-31 (was 2026-08-19 per this site's 2026-08-15 research). Expect it to move
+    again.
+  affects: [claude-pro, claude-max]
+  pages_updated: []
+  source_url: https://support.claude.com/en/articles/15910845-claude-code-may-july-2026-weekly-limits-promotion
+
+- entry_id: 2026-08-sonnet-5-pricing-permanent
+  date: 2026-08-23
+  kind: pricing
+  summary: >
+    Sonnet 5's $2/$10-per-MTok launch pricing is now permanent. The scheduled 2026-09-01
+    increase to $3/$15 will not occur.
+  affects: [claude-sonnet-5]
+  pages_updated: []
+  source_url: https://platform.claude.com/docs/en/about-claude/pricing
