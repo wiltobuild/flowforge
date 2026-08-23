@@ -1,19 +1,265 @@
 # Subscription plans. Schema: src/schemas/data.ts (planSchema).
 # Spec: docs/04-data-schemas.md
 #
-# THE MOST TRUST-CRITICAL FILE ON THE SITE.
+# THE MOST TRUST-CRITICAL FILE ON THE SITE. Every entry below was verified live on
+# 2026-08-23 against the provider's own pages (docs/tasks/m1-t1-t2-plans-models-data/).
+# Claude entries are confidence: documented (Tier-1 sourced). ChatGPT entries are
+# confidence: community-reported per the approved decision in docs/agent/decisions.md —
+# chatgpt.com/pricing and OpenAI's own Codex-limits page 403 automated fetches on two
+# separate research passes 8 days apart; no Tier-1 source has been obtainable at all.
 #
 # Rules (docs/07 ADR-003, .claude/agents/data-verifier.md):
-#   - Every value is verified against the PROVIDER'S OWN pricing page.
-#     Never an aggregator, a blog, or a search result summary.
-#   - Never fabricate a value to fill a field. `null`, "not published", and
-#     confidence: community-reported are correct answers.
-#   - `unit: opaque` with `stated_capacity: null` is expected and normal —
-#     several providers do not publish hard numbers.
-#   - Update `last_verified` only for fields you actually checked, and only to
-#     the date you checked them.
-#
-# Populated in M1-T1. Left empty deliberately: seeding this with plausible
-# numbers before verification would put unverified pricing on a site whose whole
-# premise is being trustworthy about pricing.
-[]
+#   - Never fabricate a value to fill a field. `null` + unit: opaque is correct wherever
+#     a provider doesn't publish a number — that's most of the limit data below.
+#   - Update last_verified only for fields actually re-checked, to the date checked.
+
+- plan_id: claude-free
+  provider: Anthropic
+  display_name: Claude Free
+  tier: free
+  price_usd_month: 0
+  billing_notes: >
+    Anthropic's plan pages describe Free access as "Claude on web/iOS/Android/desktop"
+    without itemizing which underlying model is used or whether it varies by load. Not
+    independently confirmed in this pass — do not assume a specific model powers Free.
+  included_products:
+    - Claude chat (web, iOS, Android, desktop)
+    - Web search
+    - Cross-conversation memory
+    - File creation and code execution
+    - Desktop extensions
+    - Slack and Google Workspace connectors
+    - Remote MCP connectors
+    - Extended thinking
+  limit_windows:
+    - window_id: session
+      duration_hours: 5
+      unit: opaque
+      stated_capacity: null
+      applies_to: [chat]
+      note: >
+        Anthropic does not publish an exact quota for Free. No usage-credit overflow
+        option is mentioned anywhere in Anthropic's plan documentation for this tier.
+  limit_style: hard-stop
+  limit_style_note: >
+    You get cut off when the 5-hour session limit is reached and simply wait for it to
+    reset — there is no way to pay for more usage on Free.
+  good_for:
+    - Trying Claude before committing to a paid plan
+    - Occasional, light use
+  not_for:
+    - Any daily coding or agentic work — the session limit will bind quickly
+  source_url: https://claude.com/pricing
+  last_verified: 2026-08-23
+  confidence: documented
+
+- plan_id: claude-pro
+  provider: Anthropic
+  display_name: Claude Pro
+  tier: entry
+  price_usd_month: 20
+  billing_notes: >
+    $17/month if billed annually ($200/year upfront); $20/month billed monthly. States
+    "access to multiple Claude models" without an exhaustive per-plan model list — this
+    site's model available_on mapping assumes the current mainline lineup (Fable 5,
+    Opus 5, Sonnet 5, Haiku 4.5) but that exact list is not individually itemized by
+    Anthropic.
+  included_products:
+    - Everything in Claude Free
+    - Claude Code
+    - Claude Cowork
+    - Claude Design
+    - Claude Science
+    - Unlimited projects
+    - Research access
+    - Access to multiple Claude models
+    - Microsoft 365 integration
+  limit_windows:
+    - window_id: session
+      duration_hours: 5
+      unit: opaque
+      stated_capacity: null
+      applies_to: [chat, claude-code]
+      note: >
+        Anthropic does not publish an exact quota. Burn rate depends on conversation
+        length, model choice, and features used (source: claude.com/pricing). Chat and
+        Claude Code draw from the same pool.
+    - window_id: weekly
+      duration_hours: 168
+      unit: opaque
+      stated_capacity: null
+      applies_to: [chat, claude-code]
+      note: >
+        A promotional +50% weekly-limit increase is active for Pro, Max, and Team
+        (support.claude.com/en/articles/15910845), extended multiple times since it
+        began, currently stated to run through 2026-08-31. Given the extension history,
+        re-verify this date before relying on it — it has already moved once since this
+        site's prior research pass (2026-08-15: Aug 19 → Aug 31).
+  limit_style: mixed
+  limit_style_note: >
+    You hit a hard wall at the 5-hour session boundary by default. If you've turned on
+    "usage credits," you can keep working past that wall at standard API rates billed to
+    your card on file — so the failure mode is a hard stop unless you've opted into
+    pay-as-you-go overflow (source: support.claude.com/en/articles/12429409).
+  good_for:
+    - Daily agentic coding with Claude Code
+    - Most individual builders on a single $20/month budget
+  not_for:
+    - Heavy multi-agent or long-running-session workloads without usage credits enabled
+  source_url: https://claude.com/pricing
+  last_verified: 2026-08-23
+  confidence: documented
+
+- plan_id: claude-max
+  provider: Anthropic
+  display_name: Claude Max
+  tier: mid
+  price_usd_month: 100
+  billing_notes: >
+    Listed as "from $100/month." Two usage multipliers exist — Max 5x and Max 20x — both
+    advertised starting at $100/month on claude.com/pricing; the exact price differential
+    between the 5x and 20x tiers was not confirmed in this pass (page framing was
+    ambiguous on this specific point). Treat $100 as the entry price into Max, not the
+    price of the full 20x tier.
+  included_products:
+    - Everything in Claude Pro
+    - Higher output limits
+    - Early access to advanced Claude features
+    - Priority access at peak times
+  limit_windows:
+    - window_id: session
+      duration_hours: 5
+      unit: opaque
+      stated_capacity: null
+      applies_to: [chat, claude-code]
+      note: "5x or 20x Pro's usage per the same 5-hour session window, per claude.com/pricing."
+    - window_id: weekly
+      duration_hours: 168
+      unit: opaque
+      stated_capacity: null
+      applies_to: [chat, claude-code]
+      note: >
+        Same +50% promotional weekly-limit increase as Pro, through 2026-08-31 as of this
+        verification — see the weekly note on claude-pro above for the extension history.
+  limit_style: mixed
+  limit_style_note: >
+    Same mechanism as Pro — a hard wall at the session boundary unless usage credits are
+    enabled — just a larger wall (5x or 20x Pro's usage).
+  good_for:
+    - Heavy daily agentic work that regularly exhausts Pro's session limit
+  not_for:
+    - Anyone not already hitting Pro's limits regularly — the price jump isn't worth it otherwise
+  source_url: https://claude.com/pricing
+  last_verified: 2026-08-23
+  confidence: documented
+
+- plan_id: chatgpt-free
+  provider: OpenAI
+  display_name: ChatGPT Free
+  tier: free
+  price_usd_month: 0
+  billing_notes: >
+    COMMUNITY-REPORTED, not independently Tier-1 confirmed. chatgpt.com/pricing and
+    OpenAI's own help-center pages 403 automated fetches — confirmed blocked on two
+    separate research passes (2026-08-15 and 2026-08-23). As of Feb 2026 the US Free tier
+    reportedly includes advertising. Verify directly before relying on any figure here.
+  included_products:
+    - ChatGPT chat, capped message limits
+  limit_windows:
+    - window_id: unknown
+      duration_hours: 3
+      unit: opaque
+      stated_capacity: null
+      applies_to: [chat]
+      note: "Not independently verified — see plan-level billing_notes."
+  limit_style: demote
+  limit_style_note: >
+    Reported pattern for OpenAI's consumer tiers generally is quality demotion under load
+    rather than a hard stop, but this has not been confirmed specifically for Free in this
+    pass — treat as unverified.
+  good_for:
+    - Trying ChatGPT before committing to a paid plan
+  not_for:
+    - Any regular coding or agentic work
+  source_url: https://chatgpt.com/pricing
+  last_verified: 2026-08-23
+  confidence: community-reported
+
+- plan_id: chatgpt-plus
+  provider: OpenAI
+  display_name: ChatGPT Plus
+  tier: entry
+  price_usd_month: 20
+  billing_notes: >
+    COMMUNITY-REPORTED, not independently Tier-1 confirmed this pass (same 403 blocks as
+    chatgpt-free — see there). Reported to include Codex, Deep Research (10 runs/month),
+    Sora video, and Agent Mode. Price has reportedly held at $20/month for an extended
+    period.
+  included_products:
+    - ChatGPT chat
+    - Codex (coding agent)
+    - Deep Research (reported ~10 runs/month)
+    - Sora video generation
+    - Agent Mode
+  limit_windows:
+    - window_id: session
+      duration_hours: 5
+      unit: messages
+      stated_capacity: null
+      applies_to: [codex]
+      note: >
+        Codex on Plus is reported as a 15-80 message band per 5-hour window, weighted by
+        task complexity rather than a flat count. OpenAI reportedly removed the 5-hour cap
+        entirely on 2026-07-12 as a "temporary" change with no stated end date, leaving
+        only a weekly limit — whether that change is still in effect as of this
+        verification date was not confirmed (source page 403-blocked).
+  limit_style: mixed
+  limit_style_note: >
+    Reported as message-band limits rather than a hard token count; when the 5-hour cap
+    is in effect, exhausting it degrades rather than fully blocking on some surfaces,
+    but Codex specifically is reported to hard-stop at a weekly ceiling. Not independently
+    confirmed this pass — verify against OpenAI's own Codex-limits page once it's
+    fetchable.
+  good_for:
+    - Individual builders wanting Codex alongside general ChatGPT use
+  not_for:
+    - Reliance on this data for a purchase decision without independent verification —
+      confidence is community-reported, not documented
+  source_url: https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan
+  last_verified: 2026-08-23
+  confidence: community-reported
+
+- plan_id: chatgpt-pro
+  provider: OpenAI
+  display_name: ChatGPT Pro
+  tier: high
+  price_usd_month: 100
+  billing_notes: >
+    COMMUNITY-REPORTED, not independently Tier-1 confirmed. Reported as two distinct
+    price points both called "Pro" — $100/month (Codex included, without unlimited Sora)
+    and $200/month (Codex plus unlimited Sora, Operator agent, advanced voice). This
+    entry represents the $100 floor; the $200 variant is not separately modeled here.
+    Confirm both price points and their exact feature split before relying on this.
+  included_products:
+    - Everything in ChatGPT Plus
+    - Codex, reported 5x-10x higher limits than Plus
+    - Reported time-limited 10x Codex launch promo through 2026-05-31 (likely expired as
+      of this verification date — not re-checked)
+  limit_windows:
+    - window_id: weekly
+      duration_hours: 168
+      unit: opaque
+      stated_capacity: null
+      applies_to: [codex]
+      note: "Reported 5x-10x Plus's Codex limits. Not independently confirmed this pass."
+  limit_style: mixed
+  limit_style_note: >
+    Same reported pattern as Plus, at a higher ceiling. Not independently confirmed —
+    verify before relying on this for a purchase decision.
+  good_for:
+    - Heavy Codex users who have already confirmed Plus isn't enough
+  not_for:
+    - Anyone for whom Plus's limits haven't been a problem
+  source_url: https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan
+  last_verified: 2026-08-23
+  confidence: community-reported

@@ -82,7 +82,7 @@ fill the field.
 | `context_window` | number | | Tokens |
 | `max_output` | number | | Tokens |
 | `modalities` | array | ✔ | `text` \| `image` \| `audio` \| `video` |
-| `capabilities` | array | ✔ | `tool_use` \| `vision` \| `extended_thinking` \| `caching` \| `batch` \| `structured_output` |
+| `capabilities` | array | ✔ | `tool_use` \| `vision` \| `extended_thinking` \| `adaptive_thinking` \| `caching` \| `batch` \| `structured_output` — `extended_thinking` is an explicit opt-in toggle; `adaptive_thinking` is always-on/automatic reasoning with no toggle. Vendors that document both treat them as distinct, independently-present capabilities, not synonyms (added 2026-08-23, `docs/agent/decisions.md`) |
 | `available_on` | array | ✔ | `plan_id` references — **drives the "can I use this?" filter**. This is the *only* place the plan↔model relationship is stored; plan pages derive their model list from it. |
 | `quota_weight` | enum | ✔ | `light` \| `moderate` \| `heavy` — relative consumption within its plan |
 | `speed_tier` | enum | | `fast` \| `balanced` \| `slow` |
@@ -202,11 +202,21 @@ is a visible to-do.
 > the two drift apart, and there is no mechanism that would catch it. The relationship is
 > now stored once, on the model, and plan pages derive their model list from it.
 
-Validated at build; failures block the build:
+Intended to be validated at build, failing the build on violation:
 
 - Every `available_on` value resolves to a real `plan_id`
-- Every `models_available` value resolves to a real `model_id`
 - Every content page with `plan_id`/`model_id` frontmatter resolves
 - Every `field-reports` entry references a valid `plan_id` and `task_archetype`
+
+> **Known gap, found in Themis review during M1-T1/T2 (2026-08-23).** Astro's
+> `reference()` only validates at query time (`getEntry`/`getCollection`) — it does not
+> automatically walk every entry in a loaded collection. Confirmed by deliberately
+> breaking a `models.yaml` → `plans.yaml` reference and observing a clean build with zero
+> errors, because no page yet queries the `plans`/`models` collections. **The bullets
+> above are the intended contract, not yet an enforced one.** Tracked as a follow-up:
+> add an explicit validation script (alongside `check-concepts-neutrality.mjs` /
+> `check-examples.mjs` in `scripts/`) that walks every reference and confirms it
+> resolves, wired into `npm run ci`. Until that lands, references are only as reliable
+> as manual review.
 - Every `canonical_page` resolves to a real route
 - No orphan data rows — every `plan_id` and `model_id` has a page rendering it

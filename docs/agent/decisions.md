@@ -56,4 +56,71 @@ risk if wrong.
 **Decision**: Any change to these files' values requires the human-verification step in
 `.claude/agents/data-verifier.md` before merge, regardless of how the proposed change was
 produced. This is in addition to, not a replacement for, the global approval gates.
-**Approved by**: user (via approval of the step-5 recommendation)
+**Approved by**: user
+
+## 2026-08-23 — M1-T1/T2: ChatGPT data shipped as community-reported
+
+**Context**: Task `m1-t1-t2-plans-models-data`. Argus confirmed, live, that no Tier-1
+source is fetchable for ChatGPT consumer plans or Codex usage limits (`chatgpt.com/pricing`
+and OpenAI's Codex-limits help article both 403 automated fetches, on two separate
+research passes 8 days apart).
+**Options considered**: (1) ship Claude only this task, defer ChatGPT to a follow-up once a
+working fetch path exists; (2) include ChatGPT now using the community-reported figures
+from the earlier research pass, explicitly marked `confidence: community-reported`.
+**Decision**: Option 2. Ship ChatGPT plans/models now with `confidence: community-reported`
+set honestly throughout, rather than waiting on a source that may never become fetchable
+by automated means.
+**Approved by**: user
+
+## 2026-08-23 — M1-T1/T2: add `adaptive_thinking` to the capabilities schema
+
+**Context**: Anthropic's own model-comparison docs treat "adaptive thinking" (always-on,
+automatic) and "extended thinking" (`thinking.type: "enabled"`, explicit toggle) as two
+distinct, independently-toggled capabilities. `src/schemas/data.ts`'s `capabilities` enum
+had no value for the former. This is technically a schema change, which normally requires
+a stop per the global approval gates.
+**Options considered**: (1) add `adaptive_thinking` as a new enum value — additive, no
+existing `models.yaml` rows to migrate; (2) collapse into `extended_thinking`, losing the
+distinction; (3) leave affected models untagged for that capability.
+**Decision**: Option 1. Small, additive, zero-migration-risk schema change; the
+distinction is load-bearing for the site's own quota-cost framing (an always-on
+adaptive-thinking model has different, less controllable quota behavior than an explicit
+opt-in one).
+**Approved by**: user
+
+## 2026-08-23 — M1-T1/T2: dates in src/data/*.yaml need a strict string schema, not z.date() or z.coerce.date()
+
+**Context**: Found via Themis review while populating `plans.yaml`/`models.yaml`. The
+custom `yamlFile` loader (`src/loaders/yaml-file.ts`) parses YAML with the `yaml` package's
+default (YAML 1.2 core) schema, which — unlike YAML 1.1 — does not auto-resolve bare date
+scalars to timestamps. Date fields in `src/data/` therefore arrive as plain strings, not
+Date objects, so `z.date()` (which expects an actual Date) fails on real data.
+`z.coerce.date()` "fixes" this but silently normalizes invalid input — `2026-02-30`
+becomes `2026-03-02` instead of erroring, and ambiguous/partial strings pass too.
+**By contrast**, content pages under `src/content/docs/` (the `docs` collection, loaded
+via Starlight's `docsLoader`) already receive real `Date` objects from frontmatter — that
+path needs plain `z.date()` and should NOT be touched.
+**Decision**: `src/schemas/data.ts` defines a shared `isoDate` schema — a regex-anchored
+YYYY-MM-DD string, round-tripped through `Date` to reject anything that isn't a real
+calendar date — used for every date field in the five data-file schemas.
+**Approved by**: user (via approval of the task's overall plan; this specific fix was a
+review-driven correction, not a separate approval gate, since it's a bug fix rather than a
+schema shape change)
+
+## 2026-08-23 — M1-T1/T2: cross-file reference integrity is not actually build-enforced
+
+**Context**: `docs/04-data-schemas.md` and a comment in `src/content.config.ts` both
+claimed a model referencing a nonexistent plan "fails the build." Themis review
+deliberately broke a reference and got a clean build — false claim. Root cause: Astro's
+`reference()` only validates when a collection is actually queried (`getEntry`/
+`getCollection`); nothing queries `plans`/`models` yet (that's M1-T3/T4), so the check
+never runs.
+**Decision**: Corrected the false documentation rather than building a fix mid-task
+(building a new validation script would itself have been unapproved scope creep). Filed
+as a concrete follow-up: add `check-references.mjs` (alongside
+`check-concepts-neutrality.mjs` / `check-examples.mjs`) that walks every reference at
+build time regardless of whether a page queries it, wired into `npm run ci`. Until that
+lands, references in `src/data/` are only as reliable as manual review.
+**Approved by**: user (informational — flagged in the task's final report, not a decision
+requiring a separate approval gate, since no code changed as a result beyond the doc
+correction) (via approval of the step-5 recommendation)

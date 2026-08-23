@@ -20,9 +20,20 @@ import {
  * frontmatter field discriminates them and drives per-type requirements — see
  * src/schemas/content.ts.
  *
- * The five data files are separate collections loaded from YAML. Cross-file
- * integrity is enforced by reference(): a model pointing at a nonexistent plan
- * fails the build rather than rendering a broken page.
+ * The five data files are separate collections loaded from YAML, cross-referenced
+ * via reference('plans') / reference('models') in src/schemas/data.ts.
+ *
+ * KNOWN GAP (found in Themis review, docs/tasks/m1-t1-t2-plans-models-data/review.md,
+ * 2026-08-23): reference() only validates at query time (getEntry/getCollection),
+ * not automatically for every entry in a loaded collection. Until a page or script
+ * actually queries these collections, a model's `available_on` can point at a
+ * nonexistent plan_id and the build will NOT catch it — confirmed by deliberately
+ * breaking a reference and observing a clean build. This is a real, unresolved
+ * gap in the site's stated cross-file integrity guarantee (docs/04-data-schemas.md),
+ * not yet fixed. Do not trust this comment's previous claim that it "fails the
+ * build" — it doesn't, today. Tracked as a follow-up: add an explicit validation
+ * script (alongside check-concepts-neutrality.mjs / check-examples.mjs) that
+ * walks every available_on and confirms it resolves, run in `npm run ci`.
  */
 export const collections = {
   docs: defineCollection({
