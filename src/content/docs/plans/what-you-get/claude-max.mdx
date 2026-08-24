@@ -1,0 +1,67 @@
+---
+title: Claude Max
+description: Same mechanism as Pro, a much bigger session window — worth it only once Pro's limit has actually become a problem.
+type: plan
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, operator, strategist]
+task: [plan]
+tool: [chat-ui, claude-code]
+plan: [higher-tier]
+quota: n-a
+effort: 5min
+plan_id: claude-max
+next:
+  - label: Claude Pro
+    link: /plans/what-you-get/claude-pro/
+  - label: Claude Opus 5
+    link: /plans/models/anthropic/opus-5/
+  - label: Plans and usage
+    link: /plans/
+---
+
+import PlanFacts from '../../../../components/PlanFacts.astro';
+
+## Who this is for
+
+People who already use Claude Pro daily and have genuinely run out of room — not people
+guessing they might need more. Max exists to remove a real, repeated bottleneck, not to
+buy peace of mind in advance.
+
+## What you get
+
+<PlanFacts planId="claude-max" />
+
+## What it's good at
+
+Heavy, sustained agentic work: long Claude Code sessions, multiple parallel subagents,
+back-to-back tasks in one sitting that would burn through Pro's window well before the
+day is over.
+
+## What it can't do
+
+It doesn't change the *mechanism* — you still hit a wall at the session boundary, just a
+much bigger one. If your workload genuinely needs more than 20x Pro's usage in a single
+window, Max won't solve that either.
+
+## How the limits feel
+
+Identical mechanism to Pro, just scaled: a hard stop at the session boundary unless usage
+credits are enabled, in which case you can pay your way through at standard API rates.
+The multiplier (5x or 20x Pro) determines how much work fits before you'd ever see that
+wall in practice.
+
+## Who should pick something else
+
+If you haven't actually hit Pro's limit with real, regular use, [Claude
+Pro](../claude-pro/) is the better default — the price jump only pays
+for itself once the limit is a recurring problem, not a hypothetical one.
+
+## Verify
+
+Pricing here is listed as a starting point ("from") rather than one fixed number — the
+5x and 20x tiers aren't broken out separately on this page yet. Check Claude's own pricing
+page directly before committing to a specific tier.

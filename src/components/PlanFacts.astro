@@ -1,0 +1,100 @@
+---
+/**
+ * Renders a plan's volatile, precise facts (price, limits, source) straight
+ * from src/data/plans.yaml. Never hand-type these into a content page's
+ * prose — that's exactly the drift golden rule 1 (AGENTS.md) exists to
+ * prevent. Narrative sections ("Who this is for", "What it's good at") stay
+ * hand-written on the page; this component covers only what would otherwise
+ * go stale silently.
+ */
+import { getEntry } from 'astro:content';
+import StalenessBadge from './StalenessBadge.astro';
+
+interface Props {
+  planId: string;
+}
+
+const { planId } = Astro.props;
+const entry = await getEntry('plans', planId);
+
+const formatPrice = (price: number | null): string =>
+  price === null ? 'Not published' : price === 0 ? 'Free' : `$${price}/month`;
+
+const formatWindow = (
+  window: NonNullable<typeof entry>['data']['limit_windows'][number],
+): string => {
+  const span =
+    window.duration_hours % 24 === 0 && window.duration_hours >= 24
+      ? `${window.duration_hours / 24}-day`
+      : `${window.duration_hours}-hour`;
+  const capacity =
+    window.stated_capacity === null
+      ? 'not published'
+      : `${window.stated_capacity} ${window.unit}`;
+  return `${span} window: ${capacity}`;
+};
+
+const CONFIDENCE_LABEL: Record<string, string> = {
+  documented: 'Documented directly from the provider',
+  'community-reported': 'Community-reported, not independently confirmed',
+  estimated: 'Estimated — not independently confirmed',
+};
+---
+
+{
+  !entry ? (
+    <p class="ff-plan-facts ff-plan-facts--error" role="status">
+      Plan data unavailable for "{planId}".
+    </p>
+  ) : (
+    <div class="ff-plan-facts">
+      <dl class="ff-plan-facts__grid">
+        <dt>Price</dt>
+        <dd>
+          {formatPrice(entry.data.price_usd_month)}
+          {entry.data.billing_notes && <span class="ff-plan-facts__note"> — {entry.data.billing_notes}</span>}
+        </dd>
+
+        <dt>Included</dt>
+        <dd>
+          <ul>{entry.data.included_products.map((item) => <li>{item}</li>)}</ul>
+        </dd>
+
+        <dt>Limits</dt>
+        <dd>
+          <ul>
+            {entry.data.limit_windows.map((window) => (
+              <li>
+                {formatWindow(window)}
+                {window.note && <span class="ff-plan-facts__note"> — {window.note}</span>}
+              </li>
+            ))}
+          </ul>
+        </dd>
+
+        <dt>What hitting the limit feels like</dt>
+        <dd>{entry.data.limit_style_note}</dd>
+      </dl>
+
+      <p class="ff-plan-facts__confidence">
+        {CONFIDENCE_LABEL[entry.data.confidence] ?? entry.data.confidence}.
+      </p>
+      <StalenessBadge
+        volatility="volatile"
+        lastVerified={entry.data.last_verified}
+        sourceUrl={entry.data.source_url}
+      />
+    </div>
+  )
+}
+
+<style>
+  .ff-plan-facts { display: grid; gap: var(--ff-space-4); margin: var(--ff-space-6) 0; padding: var(--ff-space-4); border: 1px solid var(--ff-border); border-radius: var(--ff-radius-md); background: var(--ff-surface-raised); }
+  .ff-plan-facts--error { border-color: var(--ff-warn-border); color: var(--ff-warn); font-weight: 700; }
+  .ff-plan-facts__grid { display: grid; gap: var(--ff-space-2) var(--ff-space-4); margin: 0; }
+  .ff-plan-facts__grid dt { font-weight: 700; color: var(--ff-text); }
+  .ff-plan-facts__grid dd { margin: 0 0 var(--ff-space-3); color: var(--ff-text); }
+  .ff-plan-facts__grid ul { margin: 0; padding-left: var(--ff-space-6); }
+  .ff-plan-facts__note { color: var(--ff-text-muted); }
+  .ff-plan-facts__confidence { margin: 0; font-size: var(--ff-text-sm); color: var(--ff-text-muted); }
+</style>

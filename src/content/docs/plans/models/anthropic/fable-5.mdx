@@ -1,0 +1,71 @@
+---
+title: Claude Fable 5
+description: Anthropic's highest-capability model, positioned for long-running autonomous agents — heavy on quota and slower than Sonnet or Haiku.
+type: model
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, strategist]
+task: [plan, analyze]
+tool: [api]
+plan: [claude-pro, higher-tier]
+quota: heavy
+effort: 5min
+model_id: claude-fable-5
+next:
+  - label: Claude Opus 5
+    link: /plans/models/anthropic/opus-5/
+  - label: Claude Sonnet 5
+    link: /plans/models/anthropic/sonnet-5/
+  - label: Claude Pro
+    link: /plans/what-you-get/claude-pro/
+---
+
+import ModelFacts from '../../../../../components/ModelFacts.astro';
+
+## At a glance
+
+<ModelFacts modelId="claude-fable-5" />
+
+## Best at
+
+Long-running autonomous agent work — tasks where the model needs to keep working across
+many steps without losing the thread. Anthropic itself calls this its most capable widely
+released model.
+
+## Weak at
+
+Noticeably slower than Sonnet or Haiku, which matters for anything interactive. It also
+has no explicit extended-thinking toggle — its reasoning is always-on and automatic, not
+something you turn on for a specific hard problem and off for a quick one.
+
+## Quota weight
+
+This is the heaviest model on Claude Pro or Max. Reach for it for a genuinely hard,
+high-stakes step — architecture decisions, a gnarly multi-file refactor, the kind of task
+where getting it right the first time matters more than getting it fast. It's a poor
+default for routine cleanup or quick questions, where its cost buys you nothing extra.
+
+## When to pick it
+
+When the task is long-running, ambiguous, or high-stakes enough that you'd rather spend
+more quota than redo the work.
+
+## When not to
+
+For anything you'd be comfortable delegating to a faster, cheaper sibling — most everyday
+coding falls into this category. Don't reach for Fable 5 just because it's the newest or
+most capable option available.
+
+## Notes and gotchas
+
+Its reasoning is always-on, so you can't dial it down for a simple sub-task the way you
+can toggle extended thinking off on Haiku. If a session mixes easy and hard steps,
+consider switching models between them rather than running the whole thing on Fable 5.
+
+## External signals
+
+None currently linked. This site doesn't publish benchmark scores — see the "why" in this
+site's product brief if you're wondering why not.
