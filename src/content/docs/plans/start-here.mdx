@@ -1,0 +1,99 @@
+---
+title: Which plan should I buy?
+description: One clear recommendation for most people, the honest runner-up, and what free tiers can actually do — no token math.
+type: playbook
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, operator, strategist]
+task: [plan]
+tool: [chat-ui]
+plan: [free, claude-pro, chatgpt-plus]
+quota: n-a
+effort: 5min
+situation: You need to pick an AI subscription and don't want to read a token-pricing spreadsheet to do it.
+time_estimate: 5 minutes
+next:
+  - label: Claude Pro
+    link: /plans/what-you-get/claude-pro/
+  - label: ChatGPT Plus
+    link: /plans/what-you-get/chatgpt-plus/
+  - label: Estimate a task
+    link: /plans/
+---
+
+## The situation
+
+You're about to spend money on an AI subscription and you want a straight answer, not a
+comparison chart. This page gives you one, plus the reasoning behind it, so you can tell
+whether it fits your situation or not. (Exact prices are on each plan's own page — they
+change more often than this recommendation does.)
+
+## Prerequisites
+
+None. Just an honest sense of what you'll mostly be doing with it — writing code daily, or
+something lighter.
+
+## Steps
+
+1. **Ask what you're mostly doing.** If it's daily coding — especially agentic coding,
+   where you hand off a task and let the tool work — that points one direction clearly.
+   If it's general writing, research, and occasional code, both options work about
+   equally well.
+
+2. **Ask how you feel about being interrupted vs. quietly downgraded.** This is the
+   question most people skip and regret skipping. See "How the two failure modes feel"
+   below before you answer it.
+
+3. **Ask what your budget actually is.** One entry-tier plan, or roughly double that if
+   you'd rather not choose.
+
+## Decision points
+
+**Pick [Claude Pro](../what-you-get/claude-pro/) if** you're doing daily agentic
+coding and can live with a hard stop at your session limit rather than a degraded
+experience.
+
+**Pick [ChatGPT Plus](../what-you-get/chatgpt-plus/) if** you'd rather have continuity
+— getting bumped to a lighter model under load — over being blocked outright, or if Codex
+alongside general chat use fits your workflow better.
+
+**Pick both if** your budget allows roughly double an entry-tier plan and you don't want
+to choose — a genuinely common outcome, not a cop-out. Plenty of people run Claude Code
+for complex agentic work and keep a second subscription for everyday chat.
+
+### How the two failure modes feel
+
+This is the single most useful thing to know before you buy, and it's not what most
+people assume. Claude's paid plans hit a hard wall at the session boundary: the tool
+simply stops responding until the window resets, unless you've opted into pay-as-you-go
+overflow. ChatGPT's plans are reported to degrade rather than block outright — you're more
+likely to get a weaker model than a flat refusal (this detail is community-reported for
+ChatGPT, not independently confirmed — see its plan page). Decide which experience you'd
+rather have mid-task, not after you've hit it for the first time.
+
+### What free tiers can actually do
+
+Both [Claude Free](../what-you-get/claude-free/) and
+[ChatGPT Free](../what-you-get/chatgpt-free/) are real products worth trying before
+you spend anything — they just won't support daily coding work. Start there if you're not
+sure you'll use either one regularly.
+
+## What good looks like
+
+You've picked a plan based on how its limit actually behaves, not its marketing page, and
+you know in advance what hitting that limit will feel like.
+
+## What goes wrong
+
+Buying based on feature lists instead of failure modes, then being surprised the first
+time a long session gets cut off. Or assuming a free tier will cover real daily work
+because the paid price felt unnecessary until it wasn't.
+
+## Variations by tool
+
+This page compares subscription plans, not the coding tools built on top of them — see
+[Tools](../../tools/) for how Claude Code, Codex, and other assistants relate to the plans
+above.
