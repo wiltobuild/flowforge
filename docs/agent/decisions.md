@@ -150,3 +150,39 @@ internals.
 `modelId`), the latter wrapping API pricing in the existing `LevelSection
 minLevel="advanced"`. No new dependency, no schema change.
 **Approved by**: user
+
+## 2026-08-23 — M1-T5: `/plans/start-here` uses `type: playbook`
+
+**Context**: No existing content type cleanly fits a page that names specific products to
+make a recommendation. `concept` requires vendor-neutrality (disqualified — this page's
+whole point is naming and comparing named products); `plan`/`model` require a singular
+reference (disqualified — this page is about the choice between plans, not one plan).
+**Options considered**: (1) `type: playbook`, treating the decision guide as a repeatable
+process with steps and decision points; (2) propose a new content type for
+recommendation/decision pages, updating `docs/02-content-types.md`; (3) build it as a
+custom Astro page outside the `docs` content collection entirely, bypassing `contentSchema`.
+**Decision**: Option 1. Closest existing fit, no spec/schema changes required. Accepted
+that playbook `Steps` are a looser fit here (reflective questions, not sequential prompt
+actions) — noted in `review.md` as a real but non-blocking shape mismatch.
+**Approved by**: user (via the "full auto" scope granted mid-session for routine M1 work;
+flagged in the task's own documentation rather than treated as fully autonomous, since it's
+a real content-modeling judgment call)
+
+## 2026-08-23 — M1-T5: kept the mandatory playbook body order over the literal "three paragraphs" acceptance note
+
+**Context**: `docs/08-build-plan.md`'s M1-T5 done-when says "Three paragraphs... two-sided."
+`docs/02-content-types.md`'s playbook body order is fixed at 7 mandatory sections, and
+`AGENTS.md` forbids improvising headings. These conflict once `type: playbook` was chosen
+(see the decision above) — satisfying the mandatory structure means the page cannot
+literally be three paragraphs. This tension was not caught until Themis's review.
+**Options considered**: (1) keep the mandatory playbook structure, treating the build-plan
+row's length target as superseded by the type choice; (2) strip the page down to three
+literal paragraphs, violating the playbook body-order rule; (3) revisit the type choice
+entirely to find something closer to "three paragraphs."
+**Decision**: Option 1. The body-order rule is a harder, structural, site-wide rule
+enforced by review convention across every content type; the build-plan row's length
+target was written before the type-fit conflict was understood and is a one-line note, not
+a structural constraint. Tightened prose for scannability where possible without breaking
+section order.
+**Approved by**: user (same basis as the decision above — flagged rather than silently
+resolved)
