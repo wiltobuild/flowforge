@@ -123,4 +123,30 @@ build time regardless of whether a page queries it, wired into `npm run ci`. Unt
 lands, references in `src/data/` are only as reliable as manual review.
 **Approved by**: user (informational — flagged in the task's final report, not a decision
 requiring a separate approval gate, since no code changed as a result beyond the doc
-correction) (via approval of the step-5 recommendation)
+correction)
+
+## 2026-08-23 — M1-T3/T4: 6 plan pages, sitemap doc updated to match
+
+**Context**: `docs/01-information-architecture.md`'s original sitemap sketch listed only
+3 `what-you-get/` pages, predating any real data. `content.ts`'s `plan_id` is a singular
+reference, and M1-T1/T2 populated 6 real plans.
+**Options considered**: (1) one page per plan_id, 6 pages; (2) make `plan_id` an array to
+allow combined pages, a schema change; (3) keep 3 pages, leave some verified plans without
+a page.
+**Decision**: Option 1. Six pages, `docs/01`'s sitemap sketch updated in the same change.
+**Approved by**: user
+
+## 2026-08-23 — M1-T3/T4: build PlanFacts.astro and ModelFacts.astro
+
+**Context**: `docs/examples/plan.mdx`'s own instructions require rendering structured
+facts (included products, limits, pricing, capabilities) from `plans.yaml`/`models.yaml`
+rather than retyping them into prose — required by golden rule 1, not just style. No such
+rendering component existed yet.
+**Options considered**: (1) build two narrow, read-only Astro components using
+`getEntry()`; (2) hand-write facts into prose, accepting a golden-rule violation on 13
+pages; (3) defer this task until the comparison matrix (M1-T7) is built and reuse its
+internals.
+**Decision**: Option 1. `PlanFacts.astro` (props: `planId`) and `ModelFacts.astro` (props:
+`modelId`), the latter wrapping API pricing in the existing `LevelSection
+minLevel="advanced"`. No new dependency, no schema change.
+**Approved by**: user

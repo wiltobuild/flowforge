@@ -1,0 +1,65 @@
+---
+title: Claude Opus 5
+description: Anthropic's model for complex agentic coding and enterprise work — heavy on quota, a step down in latency from Fable 5.
+type: model
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, strategist]
+task: [plan, analyze]
+tool: [api]
+plan: [claude-pro, higher-tier]
+quota: heavy
+effort: 5min
+model_id: claude-opus-5
+next:
+  - label: Claude Sonnet 5
+    link: /plans/models/anthropic/sonnet-5/
+  - label: Claude Fable 5
+    link: /plans/models/anthropic/fable-5/
+  - label: Claude Pro
+    link: /plans/what-you-get/claude-pro/
+---
+
+import ModelFacts from '../../../../../components/ModelFacts.astro';
+
+## At a glance
+
+<ModelFacts modelId="claude-opus-5" />
+
+## Best at
+
+Complex agentic coding and enterprise workloads — Anthropic's own recommendation is to
+start here if you're unsure which model to use for serious build work.
+
+## Weak at
+
+Costs more than Sonnet for routine, non-complex tasks, where the extra capability buys
+you little.
+
+## Quota weight
+
+Heavy. Treat it the way you'd treat Fable 5 — a deliberate choice for a hard step, not the
+default you leave running for everything.
+
+## When to pick it
+
+Complex agentic coding, architecture-level decisions, or enterprise-grade work where
+reliability matters more than speed or cost.
+
+## When not to
+
+Everyday coding, quick edits, or anything Sonnet already handles comfortably — which is
+most day-to-day work.
+
+## Notes and gotchas
+
+None specific beyond the general heavy-model guidance above: mix models within a session
+rather than running everything on Opus 5 by default.
+
+## External signals
+
+None currently linked. This site doesn't publish benchmark scores — see this site's
+product brief for why.

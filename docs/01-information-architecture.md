@@ -24,9 +24,17 @@ separate content set.
 /plans/                    ← money + capability. NOT "models".
   start-here               THE beginner page. one decision, three paragraphs.
   what-you-get/
+    claude-free
     claude-pro
+    claude-max
+    chatgpt-free
     chatgpt-plus
-    free-tiers
+    chatgpt-pro
+                           ↑ one page per plan_id in src/data/plans.yaml — not a
+                             fixed 3-page set. contentSchema's plan_id is a single
+                             reference(), so one page = exactly one plan. Add a
+                             page here whenever a plan is added to plans.yaml
+                             (docs/agent/decisions.md, 2026-08-23).
   usage/
     how-limits-work        reset windows; hard stop vs quality demotion
     what-burns-quota       ranked list of expensive habits
@@ -35,7 +43,7 @@ separate content set.
     field-reports          ← crowdsourced, the unfair advantage
   models/
     picking-a-model        decision tree, quota-weighted
-    [provider]/[model]     one page per model
+    [provider]/[model]     one page per model_id in src/data/models.yaml
   upgrading                when higher tiers actually pay off
   api/                     ADVANCED-GATED. token pricing, dollar calculator.
   changelog

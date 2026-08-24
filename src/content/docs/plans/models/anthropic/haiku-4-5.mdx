@@ -1,0 +1,68 @@
+---
+title: Claude Haiku 4.5
+description: The fastest, cheapest Claude model, with a smaller context window and an explicit extended-thinking toggle when you need it.
+type: model
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, strategist]
+task: [plan, analyze]
+tool: [api]
+plan: [claude-pro, higher-tier]
+quota: light
+effort: 5min
+model_id: claude-haiku-4-5
+next:
+  - label: Claude Sonnet 5
+    link: /plans/models/anthropic/sonnet-5/
+  - label: Claude Fable 5
+    link: /plans/models/anthropic/fable-5/
+  - label: Claude Pro
+    link: /plans/what-you-get/claude-pro/
+---
+
+import ModelFacts from '../../../../../components/ModelFacts.astro';
+
+## At a glance
+
+<ModelFacts modelId="claude-haiku-4-5" />
+
+## Best at
+
+Speed and cost. It's the fastest Claude model, the cheapest per token, and — unlike the
+current Claude 5 family — has an explicit extended-thinking toggle you can turn on for a
+specific hard step and leave off otherwise.
+
+## Weak at
+
+Its context window is meaningfully smaller than the other current Claude models' (see the
+figures above), which matters for very large codebases or documents. It's also not
+positioned for the most complex agentic coding.
+
+## Quota weight
+
+Light. This is the model to leave running for routine work, quick questions, and anything
+where speed matters more than maximum capability.
+
+## When to pick it
+
+Fast iteration, simple tasks, high-volume or repetitive work, and anywhere cost matters
+more than squeezing out the last bit of capability.
+
+## When not to
+
+Large-context work that exceeds 200k tokens, or genuinely complex agentic coding that
+benefits from a heavier sibling.
+
+## Notes and gotchas
+
+Unlike the Claude 5 family, Haiku 4.5's reasoning is opt-in rather than always-on — turn
+on extended thinking explicitly for a hard sub-task, and leave it off for everything else
+to keep it fast.
+
+## External signals
+
+None currently linked. This site doesn't publish benchmark scores — see this site's
+product brief for why.

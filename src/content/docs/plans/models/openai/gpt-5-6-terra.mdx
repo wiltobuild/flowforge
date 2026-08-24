@@ -1,0 +1,68 @@
+---
+title: GPT-5.6 Terra
+description: The mid-tier GPT-5.6 model — a reasonable balance of cost and capability, reported to power ChatGPT Plus.
+type: model
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, strategist]
+task: [plan, analyze]
+tool: [api]
+plan: [chatgpt-plus, higher-tier]
+quota: moderate
+effort: 5min
+model_id: gpt-5.6-terra
+next:
+  - label: GPT-5.6 Luna
+    link: /plans/models/openai/gpt-5-6-luna/
+  - label: GPT-5.6 Sol
+    link: /plans/models/openai/gpt-5-6-sol/
+  - label: ChatGPT Plus
+    link: /plans/what-you-get/chatgpt-plus/
+---
+
+import ModelFacts from '../../../../../components/ModelFacts.astro';
+
+> **Availability not independently confirmed.** Which GPT-5.6 tier actually powers which
+> ChatGPT plan in the consumer app wasn't confirmed against an official source — see
+> "External signals" below.
+
+## At a glance
+
+<ModelFacts modelId="gpt-5.6-terra" />
+
+## Best at
+
+A reasonable middle ground in the GPT-5.6 family — meaningfully cheaper than Sol, more
+capable than Luna.
+
+## Weak at
+
+Less capable than Sol on the hardest tasks.
+
+## Quota weight
+
+Moderate. The reasonable default within the GPT-5.6 family for everyday work.
+
+## When to pick it
+
+Most day-to-day tasks where Luna feels underpowered but Sol's cost isn't justified.
+
+## When not to
+
+Tasks that consistently need Sol's extra capability, or ones simple enough that Luna
+handles them fine for less.
+
+## Notes and gotchas
+
+None specific.
+
+## External signals
+
+The mapping from this API-level model to a specific ChatGPT consumer plan was not
+independently confirmed — OpenAI's consumer-facing pages didn't respond to this site's
+automated checks. Pricing and context-window figures above are sourced directly from
+OpenAI's API documentation and are independently confirmed; only the plan-availability
+link is not.

@@ -1,0 +1,71 @@
+---
+title: Claude Pro
+description: The default choice for daily agentic coding with Claude Code — a hard 5-hour wall unless you turn on pay-as-you-go overflow.
+type: plan
+level: beginner
+status: draft
+owner: wiltobuild
+last_verified: 2026-08-23
+volatility: volatile
+role: [builder, operator, strategist]
+task: [plan]
+tool: [chat-ui, claude-code]
+plan: [claude-pro]
+quota: n-a
+effort: 5min
+plan_id: claude-pro
+next:
+  - label: Claude Max
+    link: /plans/what-you-get/claude-max/
+  - label: Claude Free
+    link: /plans/what-you-get/claude-free/
+  - label: Plans and usage
+    link: /plans/
+---
+
+import PlanFacts from '../../../../components/PlanFacts.astro';
+
+## Who this is for
+
+Most individual builders doing daily work with Claude Code on a single, predictable
+monthly cost. This is the plan most people in this cohort should default to unless
+they've already confirmed they need more.
+
+## What you get
+
+<PlanFacts planId="claude-pro" />
+
+## What it's good at
+
+Real daily agentic coding. Chat and Claude Code draw from the same usage pool, so a
+morning of chatting about a design and an afternoon of Claude Code implementing it both
+count against the same window — which is usually fine, because most days don't fill it.
+
+## What it can't do
+
+It won't quietly absorb a heavy multi-agent run or a long unattended session without
+hitting the wall — Pro's window is generous for normal use, not unlimited for anything you
+throw at it. And unless you've opted in, Anthropic won't let you pay your way past a full
+session; you wait.
+
+## How the limits feel
+
+This is the plan's most important fact, and it's not what most people assume. If you
+haven't turned on usage credits, hitting the 5-hour session limit is a hard stop — the
+tool simply won't respond until the window resets. If you *have* turned on usage credits,
+you can keep going, billed at standard API rates on the card you have on file. Decide
+which of those two experiences you want before you need it, not in the middle of a task.
+
+## Who should pick something else
+
+If you're regularly hitting the session wall even with a normal day's work, [Claude
+Max](../claude-max/) gives you 5x or 20x the room at a higher price. If
+you're not sure you'll use Claude daily yet, start with [Claude
+Free](../claude-free/) instead.
+
+## Verify
+
+The facts above — price, what's included, and exactly how the limit behaves — are pulled
+directly from Anthropic's own pages and dated. Anthropic has changed weekly-limit
+promotions more than once recently; if the staleness note above is showing a warning,
+don't treat this page as current.

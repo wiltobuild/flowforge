@@ -1,0 +1,114 @@
+---
+/**
+ * Renders a model's volatile, precise facts (context window, capabilities,
+ * API pricing, source) straight from src/data/models.yaml — same rationale
+ * as PlanFacts.astro. API pricing is wrapped in LevelSection so it never
+ * shows at the beginner level (AGENTS.md golden rule 5).
+ */
+import { getEntry } from 'astro:content';
+import StalenessBadge from './StalenessBadge.astro';
+import QuotaBadge from './QuotaBadge.astro';
+import LevelSection from './LevelSection.astro';
+
+interface Props {
+  modelId: string;
+}
+
+const { modelId } = Astro.props;
+const entry = await getEntry('models', modelId);
+
+const CAPABILITY_LABEL: Record<string, string> = {
+  tool_use: 'Tool use',
+  vision: 'Vision',
+  extended_thinking: 'Extended thinking (explicit opt-in)',
+  adaptive_thinking: 'Adaptive thinking (always-on)',
+  caching: 'Prompt caching',
+  batch: 'Batch processing',
+  structured_output: 'Structured output',
+};
+
+const formatTokens = (value: number | undefined): string =>
+  value === undefined ? 'Not published' : `${(value / 1000).toLocaleString()}k tokens`;
+
+const formatPerMTok = (value: number | undefined): string =>
+  value === undefined ? '—' : `$${value}`;
+---
+
+{
+  !entry ? (
+    <p class="ff-model-facts ff-model-facts--error" role="status">
+      Model data unavailable for "{modelId}".
+    </p>
+  ) : (
+    <div class="ff-model-facts">
+      <dl class="ff-model-facts__grid">
+        <dt>Provider</dt>
+        <dd>{entry.data.provider}{entry.data.family && ` · ${entry.data.family}`}</dd>
+
+        <dt>Status</dt>
+        <dd>{entry.data.status}</dd>
+
+        <dt>Context window</dt>
+        <dd>{formatTokens(entry.data.context_window)}</dd>
+
+        <dt>Max output</dt>
+        <dd>{formatTokens(entry.data.max_output)}</dd>
+
+        <dt>Modalities</dt>
+        <dd>{entry.data.modalities.join(', ')}</dd>
+
+        <dt>Capabilities</dt>
+        <dd>
+          <ul>{entry.data.capabilities.map((cap) => <li>{CAPABILITY_LABEL[cap] ?? cap}</li>)}</ul>
+        </dd>
+
+        <dt>Quota weight</dt>
+        <dd><QuotaBadge value={entry.data.quota_weight} /></dd>
+      </dl>
+
+      {entry.data.api_pricing && (
+        <LevelSection minLevel="advanced" summary="API pricing (per million tokens)">
+          <dl class="ff-model-facts__grid">
+            <dt>Input</dt>
+            <dd>{formatPerMTok(entry.data.api_pricing.input)} / MTok</dd>
+            <dt>Output</dt>
+            <dd>{formatPerMTok(entry.data.api_pricing.output)} / MTok</dd>
+            {entry.data.api_pricing.cached_input !== undefined && (
+              <>
+                <dt>Cached input</dt>
+                <dd>{formatPerMTok(entry.data.api_pricing.cached_input)} / MTok</dd>
+              </>
+            )}
+            {entry.data.api_pricing.batch_input !== undefined && (
+              <>
+                <dt>Batch input</dt>
+                <dd>{formatPerMTok(entry.data.api_pricing.batch_input)} / MTok</dd>
+              </>
+            )}
+            {entry.data.api_pricing.batch_output !== undefined && (
+              <>
+                <dt>Batch output</dt>
+                <dd>{formatPerMTok(entry.data.api_pricing.batch_output)} / MTok</dd>
+              </>
+            )}
+          </dl>
+        </LevelSection>
+      )}
+
+      <StalenessBadge
+        volatility="volatile"
+        lastVerified={entry.data.last_verified}
+        sourceUrl={entry.data.source_url}
+      />
+    </div>
+  )
+}
+
+<style>
+  .ff-model-facts { display: grid; gap: var(--ff-space-4); margin: var(--ff-space-6) 0; padding: var(--ff-space-4); border: 1px solid var(--ff-border); border-radius: var(--ff-radius-md); background: var(--ff-surface-raised); }
+  .ff-model-facts--error { border-color: var(--ff-warn-border); color: var(--ff-warn); font-weight: 700; }
+  .ff-model-facts__grid { display: grid; gap: var(--ff-space-2) var(--ff-space-4); margin: 0; }
+  .ff-model-facts__grid dt { font-weight: 700; color: var(--ff-text); }
+  .ff-model-facts__grid dd { margin: 0 0 var(--ff-space-3); color: var(--ff-text); }
+  .ff-model-facts__grid ul { margin: 0; padding-left: var(--ff-space-6); }
+</style>
